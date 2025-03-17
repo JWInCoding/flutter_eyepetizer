@@ -1,1 +1,2 @@
-export 'lib_cache.dart';
+export 'cache_image.dart';
+export 'cache_manager.dart';

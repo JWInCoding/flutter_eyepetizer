@@ -1,9 +1,7 @@
-name: lib_utils
-description: 本地工具组件
+name: lib_navigator
+description: "A new Flutter package project."
 version: 0.0.1
 homepage:
-# 添加此行解决警告
-publish_to: none
 
 environment:
   sdk: ^3.7.0
@@ -13,11 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  logger: ^2.5.0
-  flustars: ^2.0.1
-  fluttertoast: ^8.2.12
-  event_bus: ^2.0.1
-  share_plus: ^10.1.4
+  get: ^4.7.2
 
 dev_dependencies:
   flutter_test:
