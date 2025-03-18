@@ -7,11 +7,12 @@ class AppInitialize {
   AppInitialize._();
 
   static Future<void> init() async {
+    configDio(baseUrl: 'https://baobab.kaiyanapp.com/api/');
+
     WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
     FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
     await CacheManager.preInit();
-    configDio(baseUrl: 'http://baobab.kaiyanapp.com/api/');
 
     Future.delayed(Duration(seconds: 1), () {
       FlutterNativeSplash.remove();

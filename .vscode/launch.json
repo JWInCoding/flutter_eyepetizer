@@ -1,0 +1,105 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "flutter_eyepetizer",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "flutter_eyepetizer (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "flutter_eyepetizer (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "lib_cache",
+            "cwd": "component/lib_cache",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "lib_cache (profile mode)",
+            "cwd": "component/lib_cache",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "lib_cache (release mode)",
+            "cwd": "component/lib_cache",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "lib_navigator",
+            "cwd": "component/lib_navigator",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "lib_navigator (profile mode)",
+            "cwd": "component/lib_navigator",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "lib_navigator (release mode)",
+            "cwd": "component/lib_navigator",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "lib_net",
+            "cwd": "component/lib_net",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "lib_net (profile mode)",
+            "cwd": "component/lib_net",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "lib_net (release mode)",
+            "cwd": "component/lib_net",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "lib_utils",
+            "cwd": "component/lib_utils",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "lib_utils (profile mode)",
+            "cwd": "component/lib_utils",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "lib_utils (release mode)",
+            "cwd": "component/lib_utils",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}

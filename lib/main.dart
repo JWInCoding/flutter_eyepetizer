@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
       builder: (context, AsyncSnapshot<void> snapshot) {
         return MaterialApp(
           title: 'eyepetzier',
+          themeMode: ThemeMode.system,
           theme: _buildLightTheme(),
           darkTheme: _buildDarkTheme(),
           home: const MainPage(),
@@ -46,6 +47,9 @@ class MyApp extends StatelessWidget {
         surface: Colors.white,
         onSurface: Colors.black87,
       ),
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      splashFactory: NoSplash.splashFactory,
       useMaterial3: true,
 
       // 卡片主题 - 根据图片效果优化
@@ -64,6 +68,7 @@ class MyApp extends StatelessWidget {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black87,
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: true,
         titleTextStyle: TextStyle(
           color: Colors.black,
@@ -79,6 +84,8 @@ class MyApp extends StatelessWidget {
         unselectedItemColor: Colors.grey,
         elevation: 0,
         type: BottomNavigationBarType.fixed,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
       ),
 
       // 标签栏主题
@@ -169,6 +176,9 @@ class MyApp extends StatelessWidget {
         surface: cardBackgroundColor,
         onSurface: Colors.white,
       ),
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      splashFactory: NoSplash.splashFactory,
       useMaterial3: true,
 
       // 卡片主题 - 与亮色主题对应
@@ -187,6 +197,7 @@ class MyApp extends StatelessWidget {
         backgroundColor: Colors.grey[900],
         foregroundColor: Colors.white,
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: true,
         titleTextStyle: const TextStyle(
           color: Colors.white,
@@ -202,6 +213,8 @@ class MyApp extends StatelessWidget {
         unselectedItemColor: Colors.grey[500],
         elevation: 0,
         type: BottomNavigationBarType.fixed,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
       ),
 
       // 标签栏主题

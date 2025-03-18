@@ -29,7 +29,10 @@ void configDio({
   _connectTimeout = connectTimeout ?? _connectTimeout;
   _receiveTimeout = receiveTimeout ?? _receiveTimeout;
   _sendTimeout = sendTimeout ?? _sendTimeout;
+  _baseUrl = baseUrl ?? _baseUrl;
   _httpHeader = header ?? _httpHeader;
+
+  HttpGo.instance.updateConfig();
 }
 
 class HttpGo {
@@ -69,6 +72,14 @@ class HttpGo {
     _dio.interceptors.add(DioCacheInterceptor(options: options));
   }
 
+  void updateConfig() {
+    _dio.options.baseUrl = _baseUrl;
+    _dio.options.connectTimeout = _connectTimeout;
+    _dio.options.receiveTimeout = _receiveTimeout;
+    _dio.options.sendTimeout = _sendTimeout;
+    _dio.options.headers = _httpHeader;
+  }
+
   Future<T?> request<T>(
     String url,
     String method, {
@@ -79,7 +90,7 @@ class HttpGo {
     required T Function(dynamic json) fromJson,
   }) async {
     try {
-      Response<String> response = await _dio.request(
+      Response response = await _dio.request(
         url,
         data: data,
         queryParameters: queryParams,
