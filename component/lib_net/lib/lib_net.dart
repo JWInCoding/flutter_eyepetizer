@@ -2,9 +2,20 @@ import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:lib_utils/lib_utils.dart';
 
+export 'lib_net.dart';
+
 Duration _connectTimeout = const Duration(seconds: 10);
 Duration _receiveTimeout = const Duration(seconds: 10);
 Duration _sendTimeout = const Duration(seconds: 10);
+Map<String, dynamic> _httpHeader = const {
+  'Accept': 'application/json, text/plain, */*',
+  'Accept-Encoding': 'gzip, deflate, br',
+  'Accept-Language': 'zh-CN,zh;q=0.9',
+  'Connection': 'keep-alive',
+  'Content-Type': 'application/json',
+  'User-Agent':
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1',
+};
 
 String _baseUrl = "";
 
@@ -13,10 +24,12 @@ void configDio({
   Duration? receiveTimeout,
   Duration? sendTimeout,
   String? baseUrl,
+  Map<String, dynamic>? header,
 }) {
   _connectTimeout = connectTimeout ?? _connectTimeout;
   _receiveTimeout = receiveTimeout ?? _receiveTimeout;
   _sendTimeout = sendTimeout ?? _sendTimeout;
+  _httpHeader = header ?? _httpHeader;
 }
 
 class HttpGo {
@@ -38,6 +51,7 @@ class HttpGo {
         connectTimeout: _connectTimeout,
         receiveTimeout: _receiveTimeout,
         sendTimeout: _sendTimeout,
+        headers: _httpHeader,
       ),
     );
 

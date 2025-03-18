@@ -36,6 +36,13 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_native_splash: ^2.4.5
 
+  lib_cache:
+    path: ./component/lib_cache
+  lib_net:
+    path: ./component/lib_net
+  lib_utils:
+    path: ./component/lib_utils
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
