@@ -34,6 +34,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  flutter_native_splash: ^2.4.5
 
 dev_dependencies:
   flutter_test:
@@ -49,6 +50,21 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
+# 这部分必须是顶级配置，缩进与 dependencies、flutter 平级
+flutter_native_splash:  
+  color: "#FFFFFF"
+  image: assets/images/launch_screen.pic.jpg
+  # 启用全屏模式
+  fullscreen: true
+  # 设置 Android 图片填充模式
+  android_gravity: fill
+  # 设置 iOS 图片填充模式
+  ios_content_mode: scaleToFill
+  # 如果需要支持Android 12
+  android_12:
+    image: assets/images/launch_screen.pic.jpg   
+    icon_background_color: "#FFFFFF"
+
 # The following section is specific to Flutter packages.
 flutter:
 
@@ -56,6 +72,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
