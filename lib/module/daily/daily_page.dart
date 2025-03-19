@@ -3,6 +3,7 @@ import 'package:flutter_eyepetizer/base/appbar_widget.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
 import 'package:flutter_eyepetizer/config/string.dart';
 import 'package:flutter_eyepetizer/module/daily/daily_item_collection_cover.dart';
+import 'package:flutter_eyepetizer/module/daily/daily_item_collection_follow.dart';
 import 'package:flutter_eyepetizer/module/daily/daily_title_layout.dart';
 import 'package:flutter_eyepetizer/module/daily/daily_view_model.dart';
 import 'package:flutter_eyepetizer/module/daily/video_item_layout.dart';
@@ -137,71 +138,18 @@ class _DailyPageState extends State<DailyPage>
                     },
                   );
                 } else if (item.type == 'videoCollectionOfFollow') {
-                  // 嵌套集合数据处理
-                  final nestedItems = item.data.itemList ?? [];
-                  if (nestedItems.isEmpty) return SizedBox();
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // 标题部分
-                      Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(
-                          item.data.header?.title ?? "视频集合",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      // 水平滚动列表
-                      SizedBox(
-                        height: 180, // 固定高度
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: nestedItems.length,
-                          padding: EdgeInsets.symmetric(horizontal: 4),
-                          itemBuilder: (context, nestedIndex) {
-                            final nestedItem = nestedItems[nestedIndex];
-                            return Container(
-                              width: 160, // 固定宽度
-                              margin: EdgeInsets.symmetric(horizontal: 4),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // 视频封面
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.network(
-                                      nestedItem.data.cover.feed,
-                                      height: 120,
-                                      width: 160,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (ctx, err, _) => Container(
-                                            height: 120,
-                                            width: 160,
-                                            color: Colors.grey[200],
-                                            child: Icon(Icons.error),
-                                          ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  // 视频标题
-                                  Text(
-                                    nestedItem.data.title,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
+                  return DailyItemCollectionFollow(
+                    item: item,
+                    onTap: () {
+                      showTip('视频详情页开发中');
+                    },
+                  );
+                } else if (item.type == 'squareCardCollection') {
+                  return DailyItemCollectionFollow(
+                    item: item,
+                    onTap: () {
+                      showTip('视频详情页开发中');
+                    },
                   );
                 }
 
