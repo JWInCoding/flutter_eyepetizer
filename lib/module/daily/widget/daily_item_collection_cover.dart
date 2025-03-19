@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_eyepetizer/module/daily/daily_model.dart';
+import 'package:flutter_eyepetizer/module/daily/model/daily_model.dart';
 import 'package:lib_cache/cache_image.dart';
 
 class DailyItemCollectionCover extends StatelessWidget {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/appbar_widget.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
+import 'package:flutter_eyepetizer/common/widget/video_item_layout.dart';
 import 'package:flutter_eyepetizer/config/string.dart';
-import 'package:flutter_eyepetizer/module/daily/daily_item_collection_cover.dart';
-import 'package:flutter_eyepetizer/module/daily/daily_item_collection_follow.dart';
-import 'package:flutter_eyepetizer/module/daily/daily_title_layout.dart';
-import 'package:flutter_eyepetizer/module/daily/daily_view_model.dart';
-import 'package:flutter_eyepetizer/module/daily/video_item_layout.dart';
+import 'package:flutter_eyepetizer/module/daily/viewModel/daily_view_model.dart';
+import 'package:flutter_eyepetizer/module/daily/widget/daily_item_collection_cover.dart';
+import 'package:flutter_eyepetizer/module/daily/widget/daily_item_collection_follow.dart';
+import 'package:flutter_eyepetizer/module/daily/widget/daily_title_layout.dart';
 import 'package:lib_utils/lib_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';

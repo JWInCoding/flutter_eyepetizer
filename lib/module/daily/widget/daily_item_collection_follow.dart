@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_eyepetizer/module/daily/daily_model.dart';
+import 'package:flutter_eyepetizer/module/daily/model/daily_model.dart';
 import 'package:lib_cache/lib_cache.dart';
 import 'package:lib_utils/date_utils.dart';
 
