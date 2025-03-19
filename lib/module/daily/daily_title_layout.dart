@@ -19,22 +19,3 @@ class DailyTitleHeaderLayout extends StatelessWidget {
     );
   }
 }
-
-class DailyTitleFooterLayout extends StatelessWidget {
-  const DailyTitleFooterLayout(this.item, {super.key});
-
-  final VideoItem item;
-
-  @override
-  Widget build(BuildContext context) {
-    final textColorScheme = Theme.of(context).textTheme;
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-      child: Text(
-        item.data.text ?? "",
-        textAlign: TextAlign.center,
-        style: textColorScheme.headlineSmall,
-      ),
-    );
-  }
-}

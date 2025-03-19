@@ -28,7 +28,7 @@ class DailyViewModel extends ChangeNotifier {
       if (response != null) {
         _items = response.itemList;
         _items.removeWhere((item) {
-          return item.type == 'banner2';
+          return item.type == 'banner2' || item.type == 'textFooter';
         });
         _nextPageUrl = response.nextPageUrl;
       }
