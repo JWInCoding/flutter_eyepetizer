@@ -36,7 +36,7 @@ class VideoItemLayout extends StatelessWidget {
   GestureDetector _buildCover(BuildContext context, VideoItem item) {
     final size = MediaQuery.of(context).size;
     final playIconAlpha =
-        Theme.of(context).brightness == Brightness.light ? 0.9 : 0.8;
+        Theme.of(context).brightness == Brightness.light ? 1.0 : 0.8;
 
     return GestureDetector(
       onTap: onTap,
