@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/appbar_widget.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
+import 'package:flutter_eyepetizer/config/string.dart';
+import 'package:flutter_eyepetizer/module/daily/daily_title_layout.dart';
 import 'package:flutter_eyepetizer/module/daily/daily_view_model.dart';
+import 'package:flutter_eyepetizer/module/daily/video_item_layout.dart';
 import 'package:lib_utils/lib_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
@@ -13,7 +16,7 @@ class DailyPageWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => DailyViewModel(),
-      child: const DailyPage('日报'),
+      child: const DailyPage(dailyPaper),
     );
   }
 }
@@ -124,26 +127,9 @@ class _DailyPageState extends State<DailyPage>
                 final item = viewModel.items[index];
 
                 if (item.type == 'textFooter') {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Text(
-                      item.data.text ?? "",
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  );
+                  return DailyTitleFooterLayout(item);
                 } else if (item.type == 'textHeader') {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Text(
-                      item.data.text ?? "",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  );
+                  return DailyTitleHeaderLayout(item);
                 } else if (item.type == 'videoCollectionWithCover') {
                   // 嵌套集合数据处理
                   final nestedItems = item.data.itemList ?? [];
@@ -280,9 +266,14 @@ class _DailyPageState extends State<DailyPage>
                   );
                 }
 
-                return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  child: Text(item.data.title),
+                return VideoItemLayout(
+                  item: item,
+                  onTap: () {
+                    showTip('视频详情页开发中');
+                  },
+                  onAuthorTap: () {
+                    showTip('作者详情页开发中');
+                  },
                 );
               },
             ),

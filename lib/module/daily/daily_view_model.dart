@@ -27,6 +27,9 @@ class DailyViewModel extends ChangeNotifier {
       );
       if (response != null) {
         _items = response.itemList;
+        _items.removeWhere((item) {
+          return item.type == 'banner2';
+        });
         _nextPageUrl = response.nextPageUrl;
       }
     } catch (e) {
@@ -52,6 +55,9 @@ class DailyViewModel extends ChangeNotifier {
       );
       if (response != null) {
         _items.addAll(response.itemList);
+        _items.removeWhere((item) {
+          return item.type == 'banner2';
+        });
         _nextPageUrl = response.nextPageUrl;
       }
     } catch (e) {
