@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_native_splash: ^2.4.5  
   provider: ^6.1.2
+  pull_to_refresh_flutter3: ^2.0.2
 
   lib_cache:
     path: ./component/lib_cache
@@ -57,12 +58,10 @@ dev_dependencies:
 
   rename_app: ^1.6.2
   flutter_launcher_icons: ^0.14.3
-  pull_to_refresh_flutter3: ^2.0.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
-# 这部分必须是顶级配置，缩进与 dependencies、flutter 平级
 flutter_native_splash:  
   color: "#FFFFFF"
   image: assets/launch/launch_screen.png
@@ -72,13 +71,16 @@ flutter_native_splash:
   android_gravity: fill
   # 设置 iOS 图片填充模式
   ios_content_mode: scaleToFill
-
   color_dark: "#000000"
   image_dark: assets/launch/launch_screen.png
+
   # 如果需要支持Android 12
-  android_12:
-    image: assets/launch/launch_screen.png   
+  android_12:    
+    image: "assets/icon/app_icon.png"
+    color: "#FFFFFF" 
     icon_background_color: "#FFFFFF"
+    color_dark: "#000000"
+    icon_background_color_dark: "#000000"
 
 flutter_launcher_icons:
   android: true
