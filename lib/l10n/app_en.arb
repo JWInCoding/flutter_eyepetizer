@@ -1,0 +1,10 @@
+{ 
+  "refreshPullDown": "Pull down to refresh",
+  "refreshRelease": "Release to refresh",
+  "refreshing": "Refreshing...",
+  "refreshComplete": "Refresh completed",
+  "refreshFailed": "Refresh failed",
+  "loading": "Loading...",
+  "loadMore": "Load more",
+  "noMoreData": "No more data"
+}

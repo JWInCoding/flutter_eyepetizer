@@ -1,0 +1,10 @@
+{
+  "refreshPullDown": "下拉刷新",
+  "refreshRelease": "松开刷新",
+  "refreshing": "正在刷新...",
+  "refreshComplete": "刷新完成",
+  "refreshFailed": "刷新失败",
+  "loading": "正在加载...",
+  "loadMore": "上拉加载更多",
+  "noMoreData": "没有更多数据"
+}

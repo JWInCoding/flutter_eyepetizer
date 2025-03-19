@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/appbar_widget.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
+import 'package:flutter_eyepetizer/common/widget/localized_smart_refresher.dart';
 import 'package:flutter_eyepetizer/common/widget/video_item_layout.dart';
 import 'package:flutter_eyepetizer/config/string.dart';
 import 'package:flutter_eyepetizer/module/daily/viewModel/daily_view_model.dart';
@@ -115,12 +116,11 @@ class _DailyPageState extends State<DailyPage>
             return const EmptyWidget();
           }
 
-          return SmartRefresher(
+          return LocalizedSmartRefresher(
             controller: _refreshController,
             enablePullDown: true,
             enablePullUp: true,
-            header: WaterDropHeader(),
-            footer: ClassicFooter(),
+            headerStyle: RefreshHeaderStyle.waterDrop,
             onRefresh: _onRefresh,
             onLoading: _onLoadMore,
             child: ListView.builder(
