@@ -6,6 +6,7 @@ import 'package:flutter_eyepetizer/app_initialize.dart';
 import 'package:flutter_eyepetizer/main_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:lib_navigator/lib_navigator.dart';
 
 void main() {
   if (Platform.isAndroid) {
@@ -39,7 +40,7 @@ class _MyAppState extends State<MyApp> {
     return FutureBuilder(
       future: AppInitialize.init(),
       builder: (context, AsyncSnapshot<void> snapshot) {
-        return MaterialApp(
+        return GetMaterialApp(
           title: 'eyepetzier',
           themeMode: ThemeMode.system,
           theme: _buildLightTheme(),

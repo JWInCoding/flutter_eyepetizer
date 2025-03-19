@@ -8,6 +8,8 @@ import 'package:flutter_eyepetizer/module/daily/viewModel/daily_view_model.dart'
 import 'package:flutter_eyepetizer/module/daily/widget/daily_item_collection_cover.dart';
 import 'package:flutter_eyepetizer/module/daily/widget/daily_item_collection_follow.dart';
 import 'package:flutter_eyepetizer/module/daily/widget/daily_title_layout.dart';
+import 'package:flutter_eyepetizer/module/videoDetail/video_detail_page.dart';
+import 'package:lib_navigator/lib_navigator.dart';
 import 'package:lib_utils/lib_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
@@ -156,7 +158,7 @@ class _DailyPageState extends State<DailyPage>
                 return VideoItemLayout(
                   item: item,
                   onTap: () {
-                    showTip('视频详情页开发中');
+                    toPage(() => VideoDetailPage(videoData: item.data));
                   },
                   onAuthorTap: () {
                     showTip('作者详情页开发中');
