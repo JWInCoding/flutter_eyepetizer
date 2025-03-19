@@ -26,10 +26,7 @@ class DailyViewModel extends ChangeNotifier {
         fromJson: (json) => DailyResponseModel.fromJson(json),
       );
       if (response != null) {
-        _items = response.itemList;
-        _items.removeWhere((item) {
-          return item.type == 'banner2' || item.type == 'textFooter';
-        });
+        _items = _filterItems(response.itemList);
         _nextPageUrl = response.nextPageUrl;
       }
     } catch (e) {
@@ -54,10 +51,7 @@ class DailyViewModel extends ChangeNotifier {
         fromJson: (json) => DailyResponseModel.fromJson(json),
       );
       if (response != null) {
-        _items.addAll(response.itemList);
-        _items.removeWhere((item) {
-          return item.type == 'banner2';
-        });
+        _items.addAll(_filterItems(response.itemList));
         _nextPageUrl = response.nextPageUrl;
       }
     } catch (e) {
@@ -66,5 +60,21 @@ class DailyViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  List<VideoItem> _filterItems(List<VideoItem> itemList) {
+    List<VideoItem> items = [];
+    items.addAll(itemList);
+
+    items.removeWhere((item) {
+      final saveType =
+          item.type == 'video' ||
+          item.type == 'textHeader' ||
+          item.type == 'videoCollectionWithCover' ||
+          item.type == 'videoCollectionOfFollow';
+
+      return !saveType;
+    });
+    return items;
   }
 }

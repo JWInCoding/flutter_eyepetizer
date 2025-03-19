@@ -9,13 +9,18 @@ class DailyTitleHeaderLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textColorScheme = Theme.of(context).textTheme;
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-      child: Text(
-        item.data.text ?? "",
-        textAlign: TextAlign.center,
-        style: textColorScheme.headlineSmall,
-      ),
+    return Column(
+      children: [
+        const Divider(),
+        Padding(
+          padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+          child: Text(
+            item.data.text ?? "",
+            textAlign: TextAlign.center,
+            style: textColorScheme.headlineSmall,
+          ),
+        ),
+      ],
     );
   }
 }
