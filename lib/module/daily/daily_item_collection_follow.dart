@@ -46,10 +46,12 @@ class DailyItemCollectionFollow extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(15, 7.5, 15, 7.5),
       child: Container(
         height: 90,
-        decoration: BoxDecoration(
+        foregroundDecoration: BoxDecoration(
           border: Border.all(color: shadowColor, width: 1),
           borderRadius: BorderRadius.circular(4),
         ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
+        clipBehavior: Clip.antiAlias,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
