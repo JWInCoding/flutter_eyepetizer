@@ -57,15 +57,31 @@ class _VideoControllersState extends State<VideoControllers>
     try {
       final newChewieController = ChewieController.of(context);
 
+      // 先检查是否已经初始化过
+      if (chewieController == newChewieController &&
+          controller == newChewieController.videoPlayerController &&
+          playPauseIconAnimationController != null) {
+        return; // 已经初始化过，不需要重复初始化
+      }
+
+      // 先清理旧资源
+      _cleanupResources();
+
       chewieController = newChewieController;
       controller = chewieController!.videoPlayerController;
 
-      // 初始化动画控制器
-      playPauseIconAnimationController = AnimationController(
-        vsync: this,
-        duration: const Duration(milliseconds: 400),
-        reverseDuration: const Duration(milliseconds: 400),
-      );
+      // 如果动画控制器还没创建，才创建新的
+      if (playPauseIconAnimationController == null ||
+          !playPauseIconAnimationController!.isAnimating) {
+        // 确保释放旧的控制器
+        playPauseIconAnimationController?.dispose();
+
+        playPauseIconAnimationController = AnimationController(
+          vsync: this,
+          duration: const Duration(milliseconds: 400),
+          reverseDuration: const Duration(milliseconds: 400),
+        );
+      }
 
       _initialize();
     } catch (e) {
@@ -90,19 +106,30 @@ class _VideoControllersState extends State<VideoControllers>
     final oldController = chewieController;
     final newChewieController = ChewieController.of(context);
 
-    // 添加null检查
-    chewieController = newChewieController;
-    controller = chewieController?.videoPlayerController;
+    // 只有当控制器真正发生变化时才重新初始化
+    if (oldController != newChewieController) {
+      // 临时存储旧值
+      final oldAnimController = playPauseIconAnimationController;
 
-    // 动画控制器初始化
-    playPauseIconAnimationController ??= AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-      reverseDuration: const Duration(milliseconds: 400),
-    );
-
-    if (oldController != chewieController) {
+      // 清理资源但不销毁动画控制器
       _cleanupResources();
+
+      // 设置新控制器
+      chewieController = newChewieController;
+      controller = chewieController?.videoPlayerController;
+
+      // 只在必要时创建新的动画控制器
+      if (oldAnimController == null || !oldAnimController.isAnimating) {
+        oldAnimController?.dispose();
+        playPauseIconAnimationController = AnimationController(
+          vsync: this,
+          duration: const Duration(milliseconds: 400),
+          reverseDuration: const Duration(milliseconds: 400),
+        );
+      } else {
+        playPauseIconAnimationController = oldAnimController;
+      }
+
       _initialize();
     }
 
