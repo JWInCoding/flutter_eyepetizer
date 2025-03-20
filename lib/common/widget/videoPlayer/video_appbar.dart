@@ -16,11 +16,6 @@ class VideoAppbar extends StatelessWidget {
             color: Colors.transparent,
             child: BackButton(color: Colors.white),
           ),
-          Row(
-            children: [
-              Icon(Icons.more_vert_rounded, color: Colors.white, size: 20),
-            ],
-          ),
         ],
       ),
     );

@@ -28,21 +28,33 @@ class _DailyPageState extends State<DailyPage>
     initialRefresh: false,
   );
 
+  late final DailyViewModel _viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _viewModel = DailyViewModel();
+    // 初始化时加载数据
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _viewModel.refreshDailyData();
+    });
+  }
+
   @override
   void dispose() {
     _refreshController.dispose();
+    _viewModel.dispose();
     super.dispose();
   }
 
   void _onRefresh() async {
-    final viewModel = Provider.of<DailyViewModel>(context, listen: false);
-    await viewModel.refreshDailyData();
-    if (viewModel.hasError) {
+    await _viewModel.refreshDailyData();
+    if (_viewModel.hasError) {
       _refreshController.refreshFailed();
     } else {
       _refreshController.refreshCompleted();
     }
-    if (viewModel.hasMore) {
+    if (_viewModel.hasMore) {
       _refreshController.loadComplete();
     } else {
       _refreshController.loadNoData();
@@ -50,12 +62,11 @@ class _DailyPageState extends State<DailyPage>
   }
 
   void _onLoadMore() async {
-    final viewModel = Provider.of<DailyViewModel>(context, listen: false);
-    await viewModel.loadMoreData();
-    if (viewModel.hasError) {
+    await _viewModel.loadMoreData();
+    if (_viewModel.hasError) {
       _refreshController.loadFailed();
     } else {
-      if (viewModel.hasMore) {
+      if (_viewModel.hasMore) {
         _refreshController.loadComplete();
       } else {
         _refreshController.loadNoData();
@@ -150,8 +161,8 @@ class _DailyPageState extends State<DailyPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return ChangeNotifierProvider(
-      create: (_) => DailyViewModel(),
+    return ChangeNotifierProvider.value(
+      value: _viewModel,
       child: _buildContent(),
     );
   }

@@ -9,10 +9,6 @@ class DailyItemCollectionFollow extends StatelessWidget {
   final VideoItem item;
   final VoidCallback? onTap;
 
-  static const double kCoverHeight = 140.0;
-  static const double kIconSize = 44.0;
-  static const double kSmallIconSize = 14.0;
-
   @override
   Widget build(BuildContext context) {
     // 嵌套集合数据处理
@@ -69,18 +65,15 @@ class DailyItemCollectionFollow extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        Hero(
-          tag: '${item.data.id}${item.data.time}',
-          child: CacheImage.network(
-            url: item.data.cover.feed,
-            width: 140,
-            height: double.infinity,
-          ),
+        CacheImage.network(
+          url: item.data.cover.feed,
+          width: 140,
+          height: double.infinity,
         ),
         Icon(
           Icons.play_arrow,
           color: Colors.white.withValues(alpha: playIconAlpha),
-          size: kIconSize,
+          size: 30,
         ),
       ],
     );
@@ -117,7 +110,6 @@ class DailyItemCollectionFollow extends StatelessWidget {
               Text(
                 formatDuration(item.data.duration),
                 style: textScheme.bodySmall?.copyWith(color: bodyMediumColor),
-                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
             ],
