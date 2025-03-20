@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_eyepetizer/module/daily/model/daily_model.dart';
+import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 import 'package:lib_cache/lib_cache.dart';
 import 'package:lib_utils/date_utils.dart';
 
@@ -43,13 +43,10 @@ class VideoItemLayout extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Hero(
-            tag: '${item.data.id}${item.data.time}',
-            child: CacheImage.network(
-              url: item.data.cover.feed,
-              width: size.width,
-              height: kCoverHeight,
-            ),
+          CacheImage.network(
+            url: item.data.cover.feed,
+            width: size.width,
+            height: kCoverHeight,
           ),
           Icon(
             Icons.play_arrow,

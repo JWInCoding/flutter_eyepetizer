@@ -41,6 +41,8 @@ class _VideoControllersState extends State<VideoControllers>
   ChewieController? chewieController;
   AnimationController? playPauseIconAnimationController;
 
+  final Duration _animationDuration = Duration(milliseconds: 300);
+
   @override
   void initState() {
     super.initState();
@@ -197,14 +199,11 @@ class _VideoControllersState extends State<VideoControllers>
     setState(() {
       _hideStuff = true;
       chewieController!.toggleFullScreen();
-      _showAfterExpandCollapseTimer = Timer(
-        const Duration(milliseconds: 300),
-        () {
-          setState(() {
-            _resetTimer();
-          });
-        },
-      );
+      _showAfterExpandCollapseTimer = Timer(_animationDuration, () {
+        setState(() {
+          _resetTimer();
+        });
+      });
     });
   }
 
@@ -265,7 +264,7 @@ class _VideoControllersState extends State<VideoControllers>
           child: Center(
             child: AnimatedOpacity(
               opacity: !_latestValue!.isPlaying && !_dragging ? 1 : 0,
-              duration: const Duration(milliseconds: 300),
+              duration: _animationDuration,
               child: IgnorePointer(
                 ignoring: _latestValue!.isPlaying,
                 child:
@@ -332,7 +331,7 @@ class _VideoControllersState extends State<VideoControllers>
   Widget _overlayUI() {
     return AnimatedOpacity(
       opacity: _hideStuff ? 0.0 : 1.0,
-      duration: const Duration(seconds: 3),
+      duration: _animationDuration,
       child: widget.overlayUI,
     );
   }
@@ -366,14 +365,14 @@ class _VideoControllersState extends State<VideoControllers>
     if (controller == null || chewieController == null) {
       return AnimatedOpacity(
         opacity: 0,
-        duration: const Duration(milliseconds: 300),
+        duration: _animationDuration,
         child: Container(height: barHeight),
       );
     }
 
     return AnimatedOpacity(
       opacity: _hideStuff ? 0 : 1,
-      duration: const Duration(milliseconds: 300),
+      duration: _animationDuration,
       child: Container(
         height: barHeight,
         decoration: BoxDecoration(gradient: widget.bottomGradient),
@@ -478,7 +477,7 @@ class _VideoControllersState extends State<VideoControllers>
       },
       child: AnimatedOpacity(
         opacity: _hideStuff ? 0 : 1,
-        duration: const Duration(milliseconds: 300),
+        duration: _animationDuration,
         child: ClipRRect(
           child: Container(
             height: barHeight,
@@ -524,7 +523,7 @@ class _VideoControllersState extends State<VideoControllers>
       },
       child: AnimatedOpacity(
         opacity: _hideStuff ? 0 : 1,
-        duration: const Duration(milliseconds: 300),
+        duration: _animationDuration,
         child: ClipRRect(
           child: Container(
             height: barHeight,
@@ -545,7 +544,7 @@ class _VideoControllersState extends State<VideoControllers>
       onTap: _onExpandCollapse,
       child: AnimatedOpacity(
         opacity: _hideStuff ? 0 : 1,
-        duration: const Duration(milliseconds: 300),
+        duration: _animationDuration,
         child: Container(
           height: barHeight,
           padding: const EdgeInsets.only(left: 8, right: 8),

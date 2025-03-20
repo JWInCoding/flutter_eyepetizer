@@ -18,7 +18,7 @@ class _MainPageState extends State<MainPage> {
   final PageController _pageController = PageController();
 
   final List<Widget> _pages = [
-    DailyPageWrapper(),
+    const DailyPage(dailyPaper),
     const DiscoverPage(discover),
     const RankPage(hot),
     const MinePage(mine),

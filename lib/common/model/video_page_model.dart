@@ -1,4 +1,4 @@
-class DailyResponseModel {
+class VideoPageResponseModel {
   final int count;
   final int total;
   final String? nextPageUrl;
@@ -14,7 +14,7 @@ class DailyResponseModel {
   final int releaseTime;
   final String type;
 
-  DailyResponseModel({
+  VideoPageResponseModel({
     required this.count,
     required this.total,
     this.nextPageUrl,
@@ -29,8 +29,8 @@ class DailyResponseModel {
     this.type = '',
   });
 
-  factory DailyResponseModel.fromJson(Map<String, dynamic> json) {
-    return DailyResponseModel(
+  factory VideoPageResponseModel.fromJson(Map<String, dynamic> json) {
+    return VideoPageResponseModel(
       count: json['count'] ?? 0,
       total: json['total'] ?? 0,
       nextPageUrl: json['nextPageUrl'],
@@ -75,8 +75,8 @@ class DailyResponseModel {
     };
   }
 
-  factory DailyResponseModel.empty() {
-    return DailyResponseModel(
+  factory VideoPageResponseModel.empty() {
+    return VideoPageResponseModel(
       count: 0,
       total: 0,
       nextPageUrl: null,

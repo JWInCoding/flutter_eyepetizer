@@ -3,7 +3,6 @@ import 'package:flutter_eyepetizer/base/appbar_widget.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
 import 'package:flutter_eyepetizer/common/widget/localized_smart_refresher.dart';
 import 'package:flutter_eyepetizer/common/widget/video_item_layout.dart';
-import 'package:flutter_eyepetizer/config/string.dart';
 import 'package:flutter_eyepetizer/module/daily/viewModel/daily_view_model.dart';
 import 'package:flutter_eyepetizer/module/daily/widget/daily_item_collection_cover.dart';
 import 'package:flutter_eyepetizer/module/daily/widget/daily_item_collection_follow.dart';
@@ -13,18 +12,6 @@ import 'package:lib_navigator/lib_navigator.dart';
 import 'package:lib_utils/lib_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
-
-class DailyPageWrapper extends StatelessWidget {
-  const DailyPageWrapper({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => DailyViewModel(),
-      child: const DailyPage(dailyPaper),
-    );
-  }
-}
 
 class DailyPage extends StatefulWidget {
   const DailyPage(this.title, {super.key});
@@ -41,18 +28,6 @@ class _DailyPageState extends State<DailyPage>
     initialRefresh: false,
   );
 
-  late DailyViewModel _viewModel;
-
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _viewModel = Provider.of<DailyViewModel>(context, listen: false);
-      _viewModel.refreshDailyData();
-    });
-  }
-
   @override
   void dispose() {
     _refreshController.dispose();
@@ -60,13 +35,14 @@ class _DailyPageState extends State<DailyPage>
   }
 
   void _onRefresh() async {
-    await _viewModel.refreshDailyData();
-    if (_viewModel.hasError) {
+    final viewModel = Provider.of<DailyViewModel>(context, listen: false);
+    await viewModel.refreshDailyData();
+    if (viewModel.hasError) {
       _refreshController.refreshFailed();
     } else {
       _refreshController.refreshCompleted();
     }
-    if (_viewModel.hasMore) {
+    if (viewModel.hasMore) {
       _refreshController.loadComplete();
     } else {
       _refreshController.loadNoData();
@@ -74,11 +50,12 @@ class _DailyPageState extends State<DailyPage>
   }
 
   void _onLoadMore() async {
-    await _viewModel.loadMoreData();
-    if (_viewModel.hasError) {
+    final viewModel = Provider.of<DailyViewModel>(context, listen: false);
+    await viewModel.loadMoreData();
+    if (viewModel.hasError) {
       _refreshController.loadFailed();
     } else {
-      if (_viewModel.hasMore) {
+      if (viewModel.hasMore) {
         _refreshController.loadComplete();
       } else {
         _refreshController.loadNoData();
@@ -86,9 +63,7 @@ class _DailyPageState extends State<DailyPage>
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
+  Widget _buildContent() {
     return Scaffold(
       appBar: appBar(
         context,
@@ -169,6 +144,15 @@ class _DailyPageState extends State<DailyPage>
           );
         },
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return ChangeNotifierProvider(
+      create: (_) => DailyViewModel(),
+      child: _buildContent(),
     );
   }
 

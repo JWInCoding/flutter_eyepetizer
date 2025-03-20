@@ -3,7 +3,9 @@ import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 import 'package:flutter_eyepetizer/config/API.dart';
 import 'package:lib_net/lib_net.dart';
 
-class DailyViewModel extends ChangeNotifier {
+class VideoDetailViewModel extends ChangeNotifier {
+  late final int videoId;
+
   List<VideoItem> _items = [];
   bool _isLoading = false;
   bool _hasError = false;
@@ -14,12 +16,12 @@ class DailyViewModel extends ChangeNotifier {
   bool get hasError => _hasError;
   bool get hasMore => _nextPageUrl == null ? false : true;
 
-  DailyViewModel() {
+  VideoDetailViewModel({required this.videoId}) {
     // 构造函数中可以立即执行初始加载
-    refreshDailyData();
+    refreshDetailData();
   }
 
-  Future<void> refreshDailyData() async {
+  Future<void> refreshDetailData() async {
     _isLoading = true;
     _hasError = false;
 
@@ -27,7 +29,7 @@ class DailyViewModel extends ChangeNotifier {
 
     try {
       final response = await HttpGo.instance.get(
-        API.dailyFirstPage,
+        '${API.videoRelateUrl}$videoId',
         fromJson: (json) => VideoPageResponseModel.fromJson(json),
       );
       if (response != null) {
@@ -72,11 +74,7 @@ class DailyViewModel extends ChangeNotifier {
     items.addAll(itemList);
 
     items.removeWhere((item) {
-      final saveType =
-          item.type == 'video' ||
-          item.type == 'textHeader' ||
-          item.type == 'videoCollectionWithCover' ||
-          item.type == 'videoCollectionOfFollow';
+      final saveType = item.type == 'textCard' || item.type == 'videoSmallCard';
 
       return !saveType;
     });

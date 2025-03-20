@@ -26,10 +26,10 @@ class VideoWidget extends StatefulWidget {
   final Widget overlayUI;
 
   @override
-  State<VideoWidget> createState() => _VideoWidgetState();
+  VideoWidgetState createState() => VideoWidgetState();
 }
 
-class _VideoWidgetState extends State<VideoWidget> {
+class VideoWidgetState extends State<VideoWidget> {
   VideoPlayerController? _videoPlayerController;
   ChewieController? _chewieController;
   bool _isFullScreen = false;
@@ -55,11 +55,18 @@ class _VideoWidgetState extends State<VideoWidget> {
 
       // 只有在组件仍然挂载时才创建ChewieController
       if (mounted) {
+        // 获取视频实际宽高比
+        final videoAspectRatio = _videoPlayerController!.value.aspectRatio;
+
         _chewieController = ChewieController(
           videoPlayerController: _videoPlayerController!,
           autoPlay: widget.autoPlay,
           looping: widget.looping,
-          aspectRatio: widget.aspectRatio,
+          // 使用视频实际宽高比，如果获取失败则使用默认值
+          aspectRatio:
+              videoAspectRatio.isFinite && videoAspectRatio > 0
+                  ? videoAspectRatio
+                  : widget.aspectRatio,
           allowFullScreen: widget.allowFullScreen,
           allowPlaybackSpeedChanging: widget.allowPlaybackSpeedChanging,
           customControls: VideoControllers(
@@ -127,17 +134,23 @@ class _VideoWidgetState extends State<VideoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // 如果播放器未初始化
-    if (_chewieController == null ||
-        !(_videoPlayerController?.value.isInitialized ?? false)) {
-      return const SizedBox();
-    }
-
     // 不需要考虑横屏情况，因为总是强制竖屏
     double width = MediaQuery.of(context).size.width;
     double height = width / widget.aspectRatio;
 
-    return SizedBox(
+    // 如果播放器未初始化
+    if (_chewieController == null ||
+        !(_videoPlayerController?.value.isInitialized ?? false)) {
+      return Container(
+        width: width,
+        height: height,
+        color: Colors.black,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    return Container(
+      color: Colors.black,
       width: width,
       height: height,
       child: Chewie(controller: _chewieController!),

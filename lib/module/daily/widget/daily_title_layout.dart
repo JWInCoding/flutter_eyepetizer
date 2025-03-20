@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_eyepetizer/module/daily/model/daily_model.dart';
+import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 
 class DailyTitleHeaderLayout extends StatelessWidget {
   const DailyTitleHeaderLayout(this.item, {super.key});
