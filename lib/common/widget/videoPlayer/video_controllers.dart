@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:lib_utils/date_utils.dart';
 import 'package:lib_utils/log_utils.dart';
 import 'package:video_player/video_player.dart';
 
@@ -33,6 +34,7 @@ class _VideoControllersState extends State<VideoControllers>
   Timer? _showAfterExpandCollapseTimer;
   bool _dragging = false;
   bool _displayTapped = false;
+  bool _wasFinished = false; // 标记视频是否从结束状态重新播放
 
   final barHeight = 48.0;
   final marginSize = 5.0;
@@ -213,6 +215,9 @@ class _VideoControllersState extends State<VideoControllers>
         _resetTimer();
         if (isFinished) {
           controller!.seekTo(Duration.zero);
+          // 添加一个标记表示我们刚从完成状态重新播放
+          // 可以使用类变量保存这个状态
+          _wasFinished = true;
         }
         playPauseIconAnimationController!.forward();
         controller!.play();
@@ -291,54 +296,26 @@ class _VideoControllersState extends State<VideoControllers>
           child: Center(
             child: AnimatedOpacity(
               opacity: !_latestValue!.isPlaying && !_dragging ? 1 : 0,
-              duration: _animationDuration,
+              duration:
+                  _wasFinished ? Duration(seconds: 0) : _animationDuration,
               child: IgnorePointer(
                 ignoring: _latestValue!.isPlaying,
                 child:
                     widget.showBigPlayIcon
                         ? GestureDetector(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color:
-                                  Theme.of(context).dialogTheme.backgroundColor,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Material(
-                                color: Colors.transparent,
-                                child: IconButton(
-                                  icon:
-                                      isFinished
-                                          ? const Icon(
-                                            Icons.replay_circle_filled,
-                                            size: 50,
-                                            color: Colors.white,
-                                          )
-                                          : AnimatedCrossFade(
-                                            firstChild: const Icon(
-                                              Icons.play_circle_fill,
-                                              size: 50,
-                                              color: Colors.white,
-                                            ),
-                                            secondChild: const Icon(
-                                              Icons.pause_circle_filled,
-                                              size: 50,
-                                              color: Colors.white,
-                                            ),
-                                            crossFadeState:
-                                                _latestValue!.isPlaying
-                                                    ? CrossFadeState.showSecond
-                                                    : CrossFadeState.showFirst,
-                                            duration: const Duration(
-                                              milliseconds: 500,
-                                            ),
-                                          ),
-                                  onPressed: () => _pause(),
-                                ),
-                              ),
-                            ),
-                          ),
+                          onTap: _pause,
+                          child:
+                              isFinished
+                                  ? const Icon(
+                                    Icons.replay_rounded,
+                                    size: 50,
+                                    color: Colors.white,
+                                  )
+                                  : const Icon(
+                                    Icons.play_circle_fill,
+                                    size: 50,
+                                    color: Colors.white,
+                                  ),
                         )
                         : const SizedBox(),
               ),
@@ -471,17 +448,10 @@ class _VideoControllersState extends State<VideoControllers>
     final position = _latestValue?.position ?? Duration.zero;
     final duration = _latestValue?.duration ?? Duration.zero;
 
-    // 假设formatDuration是您的工具类中的方法，如果没有，需要实现它
-    String formatTime(int seconds) {
-      final minutes = seconds ~/ 60;
-      final remainingSeconds = seconds % 60;
-      return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
-    }
-
     return Padding(
       padding: const EdgeInsets.only(right: 5),
       child: Text(
-        '${formatTime(position.inSeconds)} / ${formatTime(duration.inSeconds)}',
+        '${formatDuration(position.inSeconds)} / ${formatDuration(duration.inSeconds)}',
         style: TextStyle(fontSize: 12, color: iconColor),
       ),
     );
@@ -590,7 +560,7 @@ class _VideoControllersState extends State<VideoControllers>
 
   @override
   Widget build(BuildContext context) {
-    // 检查必要的控制器和状态是否已初始化
+    // 基本检查
     if (controller == null ||
         chewieController == null ||
         _latestValue == null) {
@@ -610,6 +580,16 @@ class _VideoControllersState extends State<VideoControllers>
           );
     }
 
+    // 判断视频是否已播放完成
+    bool isFinished = _latestValue!.position >= _latestValue!.duration;
+
+    // 如果视频已经开始播放，重置_wasFinished标志
+    if (_latestValue!.position > Duration.zero &&
+        _latestValue!.position < _latestValue!.duration &&
+        _wasFinished) {
+      _wasFinished = false;
+    }
+
     return MouseRegion(
       onHover: (event) {},
       child: GestureDetector(
@@ -621,8 +601,12 @@ class _VideoControllersState extends State<VideoControllers>
               Container(),
               Column(
                 children: [
+                  // 修改条件，避免在从完成状态重新播放且暂停时显示loading
                   if (!_latestValue!.isInitialized ||
-                      (_latestValue!.isBuffering && !_latestValue!.isPlaying))
+                      (_latestValue!.isBuffering &&
+                          !_latestValue!.isPlaying &&
+                          !isFinished &&
+                          !_wasFinished))
                     Expanded(
                       child: Center(
                         child:
