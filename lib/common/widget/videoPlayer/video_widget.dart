@@ -1,6 +1,7 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_eyepetizer/common/widget/videoPlayer/video_controllers.dart';
 import 'package:lib_utils/lib_utils.dart';
 import 'package:video_player/video_player.dart';
 
@@ -61,6 +62,10 @@ class _VideoWidgetState extends State<VideoWidget> {
           aspectRatio: widget.aspectRatio,
           allowFullScreen: widget.allowFullScreen,
           allowPlaybackSpeedChanging: widget.allowPlaybackSpeedChanging,
+          customControls: VideoControllers(
+            overlayUI: widget.overlayUI,
+            bottomGradient: blackLinearGradient(),
+          ),
         );
 
         // 添加全屏监听器
@@ -127,7 +132,7 @@ class _VideoWidgetState extends State<VideoWidget> {
       return const SizedBox();
     }
 
-    // 简化后的布局 - 不需要考虑横屏情况，因为我们总是强制竖屏
+    // 不需要考虑横屏情况，因为总是强制竖屏
     double width = MediaQuery.of(context).size.width;
     double height = width / widget.aspectRatio;
 
