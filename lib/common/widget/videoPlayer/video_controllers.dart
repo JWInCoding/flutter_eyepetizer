@@ -595,9 +595,8 @@ class _VideoControllersState extends State<VideoControllers>
               Container(),
               Column(
                 children: [
-                  if (!_latestValue!.isPlaying &&
-                          _latestValue!.duration == null ||
-                      _latestValue!.isBuffering)
+                  if (!_latestValue!.isInitialized ||
+                      (_latestValue!.isBuffering && !_latestValue!.isPlaying))
                     Expanded(
                       child: Center(
                         child:

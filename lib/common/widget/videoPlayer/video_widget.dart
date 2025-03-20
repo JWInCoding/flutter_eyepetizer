@@ -76,6 +76,7 @@ class _VideoWidgetState extends State<VideoWidget> {
       }
     } catch (e) {
       LogUtils.e("视频初始化错误: $e");
+      LogUtils.e(_videoPlayerController?.value.errorDescription ?? "错误");
     }
   }
 
