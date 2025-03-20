@@ -3,11 +3,13 @@ import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 import 'package:lib_cache/lib_cache.dart';
 import 'package:lib_utils/date_utils.dart';
 
+typedef VideoItemCallback = void Function(VideoItem videoItem);
+
 class DailyItemCollectionFollow extends StatelessWidget {
   const DailyItemCollectionFollow({super.key, required this.item, this.onTap});
 
   final VideoItem item;
-  final VoidCallback? onTap;
+  final VideoItemCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +20,12 @@ class DailyItemCollectionFollow extends StatelessWidget {
     return Column(
       children: [
         const Divider(),
-        GestureDetector(
-          onTap: onTap,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children:
-                nestedItems
-                    .map((item) => _buildCollectItem(context, item))
-                    .toList(),
-          ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children:
+              nestedItems
+                  .map((item) => _buildCollectItem(context, item))
+                  .toList(),
         ),
         const Divider(),
       ],
@@ -48,12 +47,15 @@ class DailyItemCollectionFollow extends StatelessWidget {
         ),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
         clipBehavior: Clip.antiAlias,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildCover(context, item),
-            Expanded(child: _buildInfo(context, item)),
-          ],
+        child: GestureDetector(
+          onTap: () => onTap?.call(item),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildCover(context, item),
+              Expanded(child: _buildInfo(context, item)),
+            ],
+          ),
         ),
       ),
     );

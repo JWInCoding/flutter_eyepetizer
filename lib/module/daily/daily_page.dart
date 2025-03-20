@@ -121,22 +121,22 @@ class _DailyPageState extends State<DailyPage>
                 } else if (item.type == 'videoCollectionWithCover') {
                   return DailyItemCollectionCover(
                     item: item,
-                    onTap: () {
-                      showTip('视频详情页开发中');
+                    onTap: (tapItem) {
+                      toPage(() => VideoDetailPage(videoData: tapItem.data));
                     },
                   );
                 } else if (item.type == 'videoCollectionOfFollow') {
                   return DailyItemCollectionFollow(
                     item: item,
-                    onTap: () {
-                      showTip('视频详情页开发中');
+                    onTap: (tapItem) {
+                      toPage(() => VideoDetailPage(videoData: tapItem.data));
                     },
                   );
                 } else if (item.type == 'squareCardCollection') {
                   return DailyItemCollectionFollow(
                     item: item,
-                    onTap: () {
-                      showTip('视频详情页开发中');
+                    onTap: (tapItem) {
+                      toPage(() => VideoDetailPage(videoData: tapItem.data));
                     },
                   );
                 }

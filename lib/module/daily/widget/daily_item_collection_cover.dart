@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 import 'package:lib_cache/cache_image.dart';
 
+typedef VideoItemCallback = void Function(VideoItem videoItem);
+
 class DailyItemCollectionCover extends StatelessWidget {
   const DailyItemCollectionCover({super.key, required this.item, this.onTap});
 
   final VideoItem item;
-  final VoidCallback? onTap;
+  final VideoItemCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,7 @@ class DailyItemCollectionCover extends StatelessWidget {
     final theme = Theme.of(context);
     final textScheme = theme.textTheme;
     return GestureDetector(
-      onTap: onTap,
+      onTap: () => onTap?.call(item),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 2),
         child: Stack(
