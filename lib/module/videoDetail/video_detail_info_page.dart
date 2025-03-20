@@ -28,35 +28,65 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
   Widget _buildContent() {
     return Consumer<VideoDetailViewModel>(
       builder: (context, viewModel, _) {
-        if (viewModel.items.isEmpty) {
-          if (viewModel.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (viewModel.hasError) {
-            return RetryWidget(onTapRetry: viewModel.refreshDetailData);
-          }
-          return const EmptyWidget();
-        }
+        // 创建图片提供者
+        final imageProvider = CacheImage.provider(
+          '${widget.videoData.cover.blurred}}/thumbnail/${MediaQuery.of(context).size.height}x${MediaQuery.of(context).size.width}',
+        );
 
-        return Container(
-          // 背景
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: CacheImage.provider(
-                '${widget.videoData.cover.blurred}}/thumbnail/${MediaQuery.of(context).size.height}x${MediaQuery.of(context).size.width}',
+        // 预加载图片并控制内容显示
+        return FutureBuilder(
+          // 预加载图片
+          future: precacheImage(imageProvider, context),
+          builder: (context, snapshot) {
+            // 如果图片正在加载，显示占位加载指示器
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            // 图片加载完成，显示完整内容
+            return Container(
+              // 背景 - 此时图片已经缓存
+              decoration: BoxDecoration(
+                image: DecorationImage(fit: BoxFit.cover, image: imageProvider),
               ),
-            ),
-          ),
-          // 列表
-          child: CustomScrollView(
-            slivers: [_buildVideoInfo(), _buildItemList(viewModel)],
-          ),
+              // 列表
+              child: CustomScrollView(
+                slivers: [
+                  _buildVideoInfo(),
+                  _buildRelateVideoContent(viewModel),
+                ],
+              ),
+            );
+          },
         );
       },
     );
   }
 
+  /// 相关视频列表
+  Widget _buildRelateVideoContent(VideoDetailViewModel viewModel) {
+    if (viewModel.items.isEmpty) {
+      if (viewModel.isLoading) {
+        return SliverToBoxAdapter(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        );
+      }
+      if (viewModel.hasError) {
+        return SliverToBoxAdapter(
+          child: RetryWidget(onTapRetry: viewModel.refreshDetailData),
+        );
+      }
+      return const SliverToBoxAdapter(child: EmptyWidget());
+    }
+    return _buildItemList(viewModel); // 这个已经返回SliverList，无需修改
+  }
+
+  /// 当前视频信息
   SliverToBoxAdapter _buildVideoInfo() {
     return SliverToBoxAdapter(
       child: Column(
@@ -140,6 +170,7 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
     );
   }
 
+  /// 相关视频列表
   SliverList _buildItemList(VideoDetailViewModel viewModel) {
     return SliverList.builder(
       itemCount: viewModel.items.length,
@@ -155,6 +186,7 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
     );
   }
 
+  /// 相关视频列表标题
   Widget _buildTextItem(VideoItem item) {
     return Padding(
       padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
@@ -169,6 +201,7 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
     );
   }
 
+  /// 相关视频列表 item
   Widget _buildCollectItem(BuildContext context, VideoItem item) {
     return Padding(
       padding: EdgeInsets.fromLTRB(10, 5, 10, 10),
@@ -193,6 +226,7 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
     );
   }
 
+  /// 相关视频 item 的视频信息
   Widget _buildMetadataRow(BuildContext context, VideoItem item) {
     final textColor = Colors.white.withValues(alpha: 0.9);
 
