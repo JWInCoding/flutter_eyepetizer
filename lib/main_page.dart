@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_eyepetizer/config/string.dart';
 import 'package:flutter_eyepetizer/module/daily/daily_page.dart';
 import 'package:flutter_eyepetizer/module/discover_page.dart';
 import 'package:flutter_eyepetizer/module/rank_page.dart';
@@ -17,9 +16,9 @@ class _MainPageState extends State<MainPage> {
   final PageController _pageController = PageController();
 
   final List<Widget> _pages = [
-    const DailyPage(dailyPaper),
-    const DiscoverPage(discover),
-    const RankPage(hot),
+    const DailyPage(),
+    const DiscoverPage(),
+    const RankPage(),
   ];
 
   @override
@@ -44,17 +43,17 @@ class _MainPageState extends State<MainPage> {
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),
               activeIcon: Icon(Icons.home),
-              label: dailyPaper,
+              label: '日报',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.explore_outlined),
               activeIcon: Icon(Icons.explore),
-              label: discover,
+              label: '发现',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.bookmark_outline_outlined),
               activeIcon: Icon(Icons.bookmark),
-              label: hot,
+              label: '热门',
             ),
           ],
         ),

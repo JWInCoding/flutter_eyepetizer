@@ -3,9 +3,7 @@ import 'package:flutter_eyepetizer/base/appbar_widget.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
 
 class RankPage extends StatefulWidget {
-  const RankPage(this.title, {super.key});
-
-  final String title;
+  const RankPage({super.key});
 
   @override
   State<RankPage> createState() => _RankPageState();
@@ -17,8 +15,8 @@ class _RankPageState extends State<RankPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: appBar(context, widget.title, showBack: false),
-      body: Center(child: Text(widget.title)),
+      appBar: appBar(context, '热门', showBack: false),
+      body: Center(child: Text('热门')),
     );
   }
 

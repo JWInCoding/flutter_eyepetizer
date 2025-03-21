@@ -14,10 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class DailyPage extends StatefulWidget {
-  const DailyPage(this.title, {super.key});
-
-  final String title;
-
+  const DailyPage({super.key});
   @override
   State<DailyPage> createState() => _DailyPageState();
 }
@@ -78,7 +75,7 @@ class _DailyPageState extends State<DailyPage>
     return Scaffold(
       appBar: appBar(
         context,
-        widget.title,
+        '日报',
         showBack: false,
         actions: <Widget>[
           IconButton(
