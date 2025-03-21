@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/config/string.dart';
 import 'package:flutter_eyepetizer/module/daily/daily_page.dart';
 import 'package:flutter_eyepetizer/module/discover_page.dart';
-import 'package:flutter_eyepetizer/module/mine_page.dart';
 import 'package:flutter_eyepetizer/module/rank_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -21,7 +20,6 @@ class _MainPageState extends State<MainPage> {
     const DailyPage(dailyPaper),
     const DiscoverPage(discover),
     const RankPage(hot),
-    const MinePage(mine),
   ];
 
   @override
@@ -57,11 +55,6 @@ class _MainPageState extends State<MainPage> {
               icon: Icon(Icons.bookmark_outline_outlined),
               activeIcon: Icon(Icons.bookmark),
               label: hot,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              activeIcon: Icon(Icons.person),
-              label: mine,
             ),
           ],
         ),

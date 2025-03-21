@@ -10,4 +10,3 @@ const String exitTip = '再按一次退出';
 const String dailyPaper = '日报';
 const String discover = '发现';
 const String hot = '热门';
-const String mine = '我的';
