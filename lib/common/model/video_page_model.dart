@@ -361,8 +361,9 @@ class VideoData {
     if (remark != null) data['remark'] = remark;
     if (text != null) data['text'] = text;
     if (header != null) data['header'] = header!.toJson();
-    if (itemList != null)
+    if (itemList != null) {
       data['itemList'] = itemList!.map((item) => item.toJson()).toList();
+    }
 
     return data;
   }
