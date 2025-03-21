@@ -6,10 +6,18 @@ import 'package:lib_cache/cache_image.dart';
 import 'package:lib_utils/date_utils.dart';
 import 'package:provider/provider.dart';
 
+typedef VideoItemCallback = void Function(VideoItem videoItem);
+
 class VideoDetailInfoPage extends StatefulWidget {
-  const VideoDetailInfoPage({super.key, required this.videoData});
+  const VideoDetailInfoPage({
+    super.key,
+    required this.videoData,
+    this.onItemListTap,
+  });
 
   final VideoData videoData;
+
+  final VideoItemCallback? onItemListTap;
 
   @override
   State<VideoDetailInfoPage> createState() => _VideoDetailInfoPageState();
@@ -41,7 +49,7 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
           // 背景 - 此时图片已经缓存
           decoration: BoxDecoration(
             image: DecorationImage(fit: BoxFit.cover, image: imageProvider),
-            color: Theme.of(context).colorScheme.onSurface,
+            color: Colors.black87,
           ),
           child: CustomScrollView(
             slivers: [
@@ -80,8 +88,8 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
           Padding(
             padding: EdgeInsets.only(left: 10, top: 10),
             child: Text(
-              '#${widget.videoData.category} / ${formatDateMsByYMDHM(widget.videoData.author.latestReleaseTime)}',
-              style: TextStyle(color: Colors.white, fontSize: 12),
+              '#${widget.videoData.category}   ${formatDateMsByYMDHM(widget.videoData.author.latestReleaseTime)}',
+              style: TextStyle(color: Colors.white60, fontSize: 12),
             ),
           ),
           // 简介
@@ -203,22 +211,25 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
   Widget _buildCollectItem(BuildContext context, VideoItem item) {
     return Padding(
       padding: EdgeInsets.fromLTRB(10, 5, 10, 10),
-      child: Container(
-        height: 80,
-        color: Colors.transparent,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: CacheImage.network(
-                url: item.data.cover.feed,
-                width: 130,
-                height: double.infinity,
+      child: GestureDetector(
+        onTap: () => widget.onItemListTap?.call(item),
+        child: Container(
+          height: 80,
+          color: Colors.transparent,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: CacheImage.network(
+                  url: item.data.cover.feed,
+                  width: 130,
+                  height: double.infinity,
+                ),
               ),
-            ),
-            Expanded(child: _buildMetadataRow(context, item)),
-          ],
+              Expanded(child: _buildMetadataRow(context, item)),
+            ],
+          ),
         ),
       ),
     );

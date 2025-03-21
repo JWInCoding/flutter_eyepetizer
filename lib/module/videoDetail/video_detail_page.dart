@@ -4,6 +4,7 @@ import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 import 'package:flutter_eyepetizer/common/widget/videoPlayer/video_appbar.dart';
 import 'package:flutter_eyepetizer/common/widget/videoPlayer/video_widget.dart';
 import 'package:flutter_eyepetizer/module/videoDetail/video_detail_info_page.dart';
+import 'package:lib_navigator/lib_navigator.dart';
 
 class VideoDetailPage extends StatefulWidget {
   const VideoDetailPage({super.key, required this.videoData});
@@ -54,10 +55,23 @@ class _VideoDetailPageState extends State<VideoDetailPage>
           children: [
             _statusBar(),
             VideoWidget(
+              key: videoKey,
               videoUrl: widget.videoData.playUrl,
               overlayUI: VideoAppbar(),
             ),
-            Expanded(flex: 1, child: VideoDetailInfoPage(videoData: videodata)),
+            Expanded(
+              flex: 1,
+              child: VideoDetailInfoPage(
+                videoData: videodata,
+                onItemListTap: (videoItem) {
+                  videoKey.currentState?.pause();
+                  toPage(
+                    () => VideoDetailPage(videoData: videoItem.data),
+                    preventDuplicates: false,
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
