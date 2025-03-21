@@ -5,6 +5,7 @@ import 'package:flutter_eyepetizer/common/widget/videoPlayer/video_appbar.dart';
 import 'package:flutter_eyepetizer/common/widget/videoPlayer/video_widget.dart';
 import 'package:flutter_eyepetizer/module/videoDetail/video_detail_info_page.dart';
 import 'package:lib_navigator/lib_navigator.dart';
+import 'package:lib_utils/lib_utils.dart';
 
 class VideoDetailPage extends StatefulWidget {
   const VideoDetailPage({super.key, required this.videoData});
@@ -57,7 +58,14 @@ class _VideoDetailPageState extends State<VideoDetailPage>
             VideoWidget(
               key: videoKey,
               videoUrl: widget.videoData.playUrl,
-              overlayUI: VideoAppbar(),
+              overlayUI: VideoAppbar(
+                onShareTap: () {
+                  share(
+                    widget.videoData.title,
+                    widget.videoData.webUrl.forWeibo,
+                  );
+                },
+              ),
             ),
             Expanded(
               flex: 1,

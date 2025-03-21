@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:lib_utils/lib_utils.dart';
 
 class VideoAppbar extends StatelessWidget {
-  const VideoAppbar({super.key});
+  const VideoAppbar({super.key, this.onShareTap});
+
+  final VoidCallback? onShareTap;
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +17,11 @@ class VideoAppbar extends StatelessWidget {
           Material(
             color: Colors.transparent,
             child: BackButton(color: Colors.white),
+          ),
+          IconButton(
+            color: Colors.white,
+            onPressed: onShareTap,
+            icon: Icon(Icons.share, color: Colors.white, size: 20),
           ),
         ],
       ),

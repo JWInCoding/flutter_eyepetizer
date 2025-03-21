@@ -35,9 +35,7 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
 
   Widget _buildContent() {
     // 创建图片提供者
-    final imageProvider = CacheImage.provider(
-      '${widget.videoData.cover.blurred}}/thumbnail/${MediaQuery.of(context).size.height}x${MediaQuery.of(context).size.width}',
-    );
+    final imageProvider = CacheImage.provider(widget.videoData.cover.blurred);
     return FutureBuilder(
       future: precacheImage(imageProvider, context),
       builder: (context, snapshot) {
@@ -88,7 +86,7 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
           Padding(
             padding: EdgeInsets.only(left: 10, top: 10),
             child: Text(
-              '#${widget.videoData.category}   ${formatDateMsByYMDHM(widget.videoData.author.latestReleaseTime)}',
+              '#${widget.videoData.titlePgc}   ${formatDateMsByYMDHM(widget.videoData.author.latestReleaseTime)}',
               style: TextStyle(color: Colors.white60, fontSize: 12),
             ),
           ),
@@ -130,8 +128,8 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
                     children: [
                       Text(
                         widget.videoData.author.name.isEmpty
-                            ? widget.videoData.author.name
-                            : widget.videoData.provider.name,
+                            ? widget.videoData.provider.name
+                            : widget.videoData.author.name,
                         style: TextStyle(color: Colors.white, fontSize: 14),
                       ),
                       Text(
