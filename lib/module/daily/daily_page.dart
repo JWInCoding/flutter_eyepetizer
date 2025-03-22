@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_eyepetizer/base/appbar_widget.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
 import 'package:flutter_eyepetizer/common/widget/localized_smart_refresher.dart';
 import 'package:flutter_eyepetizer/common/widget/video_item_layout.dart';
@@ -68,24 +67,9 @@ class _DailyPageState extends State<DailyPage>
   }
 
   Widget _buildContent() {
-    return Scaffold(
-      appBar: appBar(
-        context,
-        '日报',
-        showBack: false,
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {
-              showTip('开发中');
-            },
-            icon: Icon(
-              Icons.search,
-              color: Theme.of(context).appBarTheme.foregroundColor,
-            ),
-          ),
-        ],
-      ),
-      body: Consumer<DailyViewModel>(
+    return SafeArea(
+      bottom: false,
+      child: Consumer<DailyViewModel>(
         builder: (context, viewModel, child) {
           if (viewModel.items.isEmpty) {
             if (viewModel.isLoading) {

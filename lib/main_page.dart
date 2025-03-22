@@ -51,8 +51,8 @@ class _MainPageState extends State<MainPage> {
               label: '发现',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.follow_the_signs_outlined),
-              activeIcon: Icon(Icons.follow_the_signs),
+              icon: Icon(Icons.subscriptions_outlined),
+              activeIcon: Icon(Icons.subscriptions),
               label: '关注',
             ),
           ],

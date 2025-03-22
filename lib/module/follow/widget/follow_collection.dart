@@ -45,7 +45,6 @@ class FollowCollection extends StatelessWidget {
   Widget _buildHeader(BuildContext context, VideoItem item) {
     final theme = Theme.of(context);
     final textScheme = theme.textTheme;
-    final backgroundColor = theme.cardTheme.color ?? theme.colorScheme.surface;
 
     final header = item.data.header;
     if (header == null) {
@@ -53,7 +52,6 @@ class FollowCollection extends StatelessWidget {
     }
 
     return Container(
-      decoration: BoxDecoration(color: backgroundColor),
       padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
       child: Row(
         children: [
