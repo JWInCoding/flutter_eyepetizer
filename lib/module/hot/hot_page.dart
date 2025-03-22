@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
 import 'package:flutter_eyepetizer/config/api.dart';
-import 'package:flutter_eyepetizer/module/discover/model/tabinfo_model.dart';
+import 'package:flutter_eyepetizer/module/hot/hot_list_page.dart';
+import 'package:flutter_eyepetizer/module/hot/tabinfo_model.dart';
 import 'package:lib_net/lib_net.dart';
 import 'package:lib_utils/lib_utils.dart';
 
-class DiscoverPage extends StatefulWidget {
-  const DiscoverPage({super.key});
+class HotPage extends StatefulWidget {
+  const HotPage({super.key});
 
   @override
-  State<DiscoverPage> createState() => _DiscoverPageState();
+  State<HotPage> createState() => _HotPageState();
 }
 
-class _DiscoverPageState extends State<DiscoverPage>
+class _HotPageState extends State<HotPage>
     with
-        BasePage<DiscoverPage>,
+        BasePage<HotPage>,
         AutomaticKeepAliveClientMixin,
         TickerProviderStateMixin {
   bool _isLoading = true;
@@ -26,13 +27,13 @@ class _DiscoverPageState extends State<DiscoverPage>
   void initState() {
     super.initState();
 
-    _loadDiscoveryTabs();
+    _loadHotTabs();
   }
 
-  void _loadDiscoveryTabs() async {
+  void _loadHotTabs() async {
     try {
       TabInfo? response = await HttpGo.instance.get(
-        API.discoverTabs,
+        API.rankList,
         fromJson: (json) => TabInfo.fromJson(json),
       );
 
@@ -67,7 +68,7 @@ class _DiscoverPageState extends State<DiscoverPage>
       );
     }
     if (_hasError) {
-      return RetryWidget(onTapRetry: _loadDiscoveryTabs);
+      return RetryWidget(onTapRetry: _loadHotTabs);
     }
     if (_tabList.isEmpty) {
       return EmptyWidget();
@@ -95,7 +96,7 @@ class _DiscoverPageState extends State<DiscoverPage>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: _tabList.map((e) => Center(child: Text(e.name))).toList(),
+        children: _tabList.map((e) => HotListPage(apiUrl: e.apiUrl)).toList(),
       ),
     );
   }
