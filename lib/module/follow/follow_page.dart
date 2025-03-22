@@ -61,9 +61,21 @@ class _FollowPageState extends State<FollowPage>
   }
 
   Widget _buildContent() {
-    return SafeArea(
-      bottom: false,
-      child: Consumer<FollowViewModel>(
+    return NestedScrollView(
+      headerSliverBuilder: (context, innerBoxIsScrolled) {
+        return <Widget>[
+          // 使用SliverAppBar让内容可以滚动到顶部
+          SliverAppBar(
+            // 将高度设置为0可以隐藏AppBar但保留其行为
+            toolbarHeight: 0,
+            // 以下设置允许内容滚动到顶部边缘
+            floating: true,
+            pinned: false,
+            snap: false,
+          ),
+        ];
+      },
+      body: Consumer<FollowViewModel>(
         builder: (context, viewModel, child) {
           if (viewModel.items.isEmpty) {
             if (viewModel.isLoading) {
