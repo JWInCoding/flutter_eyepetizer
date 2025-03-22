@@ -50,6 +50,7 @@ class _HotListPageState extends State<HotListPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ChangeNotifierProvider.value(
       value: _viewModel,
       child: Consumer<HotListViewModel>(
