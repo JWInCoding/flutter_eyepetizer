@@ -6,6 +6,7 @@ AppBar appBar(
   String title, {
   bool showBack = true,
   List<Widget>? actions,
+  PreferredSizeWidget? bottom,
 }) {
   final appBarTheme = Theme.of(context).appBarTheme;
   final brightness = Theme.of(context).brightness;
@@ -41,5 +42,6 @@ AppBar appBar(
     backgroundColor: appBarTheme.backgroundColor,
     leading: showBack ? BackButton(color: appBarTheme.foregroundColor) : null,
     actions: actions,
+    bottom: bottom,
   );
 }

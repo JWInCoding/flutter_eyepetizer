@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/module/daily/daily_page.dart';
-import 'package:flutter_eyepetizer/module/discover_page.dart';
-import 'package:flutter_eyepetizer/module/rank_page.dart';
+import 'package:flutter_eyepetizer/module/discover/discover_page.dart';
+import 'package:flutter_eyepetizer/module/follow/follow_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -18,7 +18,7 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> _pages = [
     const DailyPage(),
     const DiscoverPage(),
-    const RankPage(),
+    const FollowPage(),
   ];
 
   @override
@@ -51,9 +51,9 @@ class _MainPageState extends State<MainPage> {
               label: '发现',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.bookmark_outline_outlined),
-              activeIcon: Icon(Icons.bookmark),
-              label: '热门',
+              icon: Icon(Icons.follow_the_signs_outlined),
+              activeIcon: Icon(Icons.follow_the_signs),
+              label: '关注',
             ),
           ],
         ),
