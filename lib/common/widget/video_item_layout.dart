@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
-import 'package:lib_cache/lib_cache.dart';
-import 'package:lib_utils/date_utils.dart';
+import 'package:flutter_eyepetizer/common/utils/cache_image.dart';
+import 'package:flutter_eyepetizer/common/utils/date_utils.dart';
 
 class VideoItemLayout extends StatelessWidget {
   // 类常量定义

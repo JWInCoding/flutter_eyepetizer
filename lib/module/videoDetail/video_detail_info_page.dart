@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
+import 'package:flutter_eyepetizer/common/utils/cache_image.dart';
+import 'package:flutter_eyepetizer/common/utils/date_utils.dart';
 import 'package:flutter_eyepetizer/module/videoDetail/video_detail_view_model.dart';
-import 'package:lib_cache/cache_image.dart';
-import 'package:lib_utils/date_utils.dart';
 import 'package:provider/provider.dart';
 
 typedef VideoItemCallback = void Function(VideoItem videoItem);

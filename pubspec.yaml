@@ -45,15 +45,24 @@ dependencies:
   #播放器
   chewie: ^1.11.0
   video_player: ^2.9.3
+  #日志
+  logger: ^2.5.0
+  # 常用工具类
+  flustars: ^2.0.1
+  # toast
+  fluttertoast: ^8.2.12
+  # 分享
+  share_plus: ^10.1.4
+  # 本地储存
+  shared_preferences: ^2.5.2
+  # 图片
+  cached_network_image: ^3.4.1
+  # 网络
+  dio: ^5.8.0+1
+  dio_cache_interceptor: ^3.5.1
+  # GetX
+  get: ^4.7.2
 
-  lib_cache:
-    path: ./component/lib_cache
-  lib_net:
-    path: ./component/lib_net
-  lib_utils:
-    path: ./component/lib_utils
-  lib_navigator:
-    path: ./component/lib_navigator
 
 dev_dependencies:
   flutter_test:

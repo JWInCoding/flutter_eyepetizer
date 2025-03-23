@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
+import 'package:flutter_eyepetizer/common/utils/navigator_util.dart';
+import 'package:flutter_eyepetizer/common/utils/toast_utils.dart';
 import 'package:flutter_eyepetizer/common/widget/localized_smart_refresher.dart';
 import 'package:flutter_eyepetizer/common/widget/video_item_layout.dart';
 import 'package:flutter_eyepetizer/module/hot/hot_list_view_model.dart';
 import 'package:flutter_eyepetizer/module/videoDetail/video_detail_page.dart';
-import 'package:lib_navigator/lib_navigator.dart';
-import 'package:lib_utils/toast_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 

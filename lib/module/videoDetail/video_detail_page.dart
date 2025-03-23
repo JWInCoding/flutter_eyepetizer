@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
+import 'package:flutter_eyepetizer/common/utils/navigator_util.dart';
+import 'package:flutter_eyepetizer/common/utils/share_utils.dart';
 import 'package:flutter_eyepetizer/common/widget/videoPlayer/video_appbar.dart';
 import 'package:flutter_eyepetizer/common/widget/videoPlayer/video_widget.dart';
 import 'package:flutter_eyepetizer/module/videoDetail/video_detail_info_page.dart';
-import 'package:lib_navigator/lib_navigator.dart';
-import 'package:lib_utils/lib_utils.dart';
 
 class VideoDetailPage extends StatefulWidget {
   const VideoDetailPage({super.key, required this.videoData});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eyepetizer/common/utils/cache_manager.dart';
+import 'package:flutter_eyepetizer/common/utils/request_util.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:lib_cache/lib_cache.dart';
-import 'package:lib_net/lib_net.dart';
 
 class AppInitialize {
   AppInitialize._();

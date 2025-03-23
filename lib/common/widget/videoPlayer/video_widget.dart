@@ -1,8 +1,9 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_eyepetizer/common/utils/log_utils.dart';
+import 'package:flutter_eyepetizer/common/utils/view_utils.dart';
 import 'package:flutter_eyepetizer/common/widget/videoPlayer/video_controllers.dart';
-import 'package:lib_utils/lib_utils.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoWidget extends StatefulWidget {

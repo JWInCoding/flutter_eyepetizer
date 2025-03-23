@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
+import 'package:flutter_eyepetizer/common/utils/request_util.dart';
 import 'package:flutter_eyepetizer/config/Api.dart';
-import 'package:lib_net/lib_net.dart';
 
 class CategoryDetailViewModel extends ChangeNotifier {
   final int categoryId;

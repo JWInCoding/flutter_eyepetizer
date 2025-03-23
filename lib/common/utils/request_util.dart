@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
-import 'package:lib_utils/lib_utils.dart';
-
-export 'lib_net.dart';
+import 'package:flutter_eyepetizer/common/utils/log_utils.dart';
+import 'package:flutter_eyepetizer/common/utils/toast_utils.dart';
 
 Duration _connectTimeout = const Duration(seconds: 10);
 Duration _receiveTimeout = const Duration(seconds: 10);

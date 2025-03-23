@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:lib_utils/date_utils.dart';
-import 'package:lib_utils/log_utils.dart';
+import 'package:flutter_eyepetizer/common/utils/date_utils.dart';
+import 'package:flutter_eyepetizer/common/utils/log_utils.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoControllers extends StatefulWidget {

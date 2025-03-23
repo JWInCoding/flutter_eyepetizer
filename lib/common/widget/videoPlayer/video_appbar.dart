@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lib_utils/lib_utils.dart';
+import 'package:flutter_eyepetizer/common/utils/view_utils.dart';
 
 class VideoAppbar extends StatelessWidget {
   const VideoAppbar({super.key, this.onShareTap});

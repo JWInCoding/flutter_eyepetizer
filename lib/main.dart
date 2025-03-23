@@ -7,7 +7,7 @@ import 'package:flutter_eyepetizer/config/theme.dart';
 import 'package:flutter_eyepetizer/main_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:lib_navigator/lib_navigator.dart';
+import 'package:get/get.dart';
 
 void main() {
   if (Platform.isAndroid) {
