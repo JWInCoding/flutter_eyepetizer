@@ -67,101 +67,98 @@ class _DailyPageState extends State<DailyPage>
   }
 
   Widget _buildContent() {
-    return NestedScrollView(
-      headerSliverBuilder: (context, innerBoxIsScrolled) {
-        return <Widget>[
-          // 使用SliverAppBar让内容可以滚动到顶部
-          SliverAppBar(
-            // 以下设置允许内容滚动到顶部边缘
-            floating: true,
-            pinned: false,
-            snap: false,
-            // 重要：设置为透明以便看到内容滚动到顶部
-            // backgroundColor: Colors.transparent,
-            // // 不显示返回按钮
-            // automaticallyImplyLeading: false,
-            // // 展开高度为0
-            // expandedHeight: 0,
-            title: Text(
-              'eyepetizer',
-              style: TextStyle(
-                color: Theme.of(context).appBarTheme.titleTextStyle?.color,
-                fontStyle: FontStyle.italic,
+    return Scaffold(
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return <Widget>[
+            // 使用SliverAppBar让内容可以滚动到顶部
+            SliverAppBar(
+              // 以下设置允许内容滚动到顶部边缘
+              floating: true,
+              pinned: false,
+              snap: true,
+              title: Text(
+                'eyepetizer',
+                style: TextStyle(
+                  color: Theme.of(context).appBarTheme.titleTextStyle?.color,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  showTip('开发中');
-                },
-                icon: Icon(Icons.search),
-              ),
-            ],
-          ),
-        ];
-      },
-      body: Consumer<DailyViewModel>(
-        builder: (context, viewModel, child) {
-          if (viewModel.items.isEmpty) {
-            if (viewModel.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (viewModel.hasError) {
-              return RetryWidget(onTapRetry: _onRefresh);
-            }
-            return const EmptyWidget();
-          }
-
-          return LocalizedSmartRefresher(
-            controller: _refreshController,
-            enablePullDown: true,
-            enablePullUp: true,
-            headerStyle: RefreshHeaderStyle.waterDrop,
-            onRefresh: _onRefresh,
-            onLoading: _onLoadMore,
-            child: ListView.builder(
-              itemCount: viewModel.items.length,
-              itemBuilder: (context, index) {
-                final item = viewModel.items[index];
-
-                if (item.type == 'textHeader') {
-                  return DailyTitleHeaderLayout(item);
-                } else if (item.type == 'videoCollectionWithCover') {
-                  return DailyItemCollectionCover(
-                    item: item,
-                    onTap: (tapItem) {
-                      toPage(() => VideoDetailPage(videoData: tapItem.data));
-                    },
-                  );
-                } else if (item.type == 'videoCollectionOfFollow') {
-                  return DailyItemCollectionFollow(
-                    item: item,
-                    onTap: (tapItem) {
-                      toPage(() => VideoDetailPage(videoData: tapItem.data));
-                    },
-                  );
-                } else if (item.type == 'squareCardCollection') {
-                  return DailyItemCollectionFollow(
-                    item: item,
-                    onTap: (tapItem) {
-                      toPage(() => VideoDetailPage(videoData: tapItem.data));
-                    },
-                  );
-                }
-
-                return VideoItemLayout(
-                  item: item,
-                  onTap: () {
-                    toPage(() => VideoDetailPage(videoData: item.data));
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    showTip('开发中');
                   },
-                  onAuthorTap: () {
-                    showTip('作者详情页开发中');
-                  },
-                );
-              },
+                  icon: Icon(Icons.search),
+                ),
+              ],
             ),
-          );
+          ];
         },
+        body: Consumer<DailyViewModel>(
+          builder: (context, viewModel, child) {
+            if (viewModel.items.isEmpty) {
+              if (viewModel.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (viewModel.hasError) {
+                return RetryWidget(onTapRetry: _onRefresh);
+              }
+              return const EmptyWidget();
+            }
+
+            return LocalizedSmartRefresher(
+              controller: _refreshController,
+              enablePullDown: true,
+              enablePullUp: true,
+              headerStyle: RefreshHeaderStyle.waterDrop,
+              onRefresh: _onRefresh,
+              onLoading: _onLoadMore,
+              child: ListView.builder(
+                itemCount: viewModel.items.length,
+                itemBuilder: (context, index) {
+                  final item = viewModel.items[index];
+
+                  if (item.type == 'textHeader') {
+                    return DailyTitleHeaderLayout(item);
+                  } else if (item.type == 'videoCollectionWithCover') {
+                    return DailyItemCollectionCover(
+                      item: item,
+                      onTap: (tapItem) {
+                        toPage(() => VideoDetailPage(videoData: tapItem.data));
+                      },
+                    );
+                  } else if (item.type == 'videoCollectionOfFollow') {
+                    return DailyItemCollectionFollow(
+                      item: item,
+                      onTap: (tapItem) {
+                        toPage(() => VideoDetailPage(videoData: tapItem.data));
+                      },
+                    );
+                  } else if (item.type == 'squareCardCollection') {
+                    return DailyItemCollectionFollow(
+                      item: item,
+                      onTap: (tapItem) {
+                        toPage(() => VideoDetailPage(videoData: tapItem.data));
+                      },
+                    );
+                  } else if (item.type == 'video') {
+                    return VideoItemLayout(
+                      item: item,
+                      onTap: () {
+                        toPage(() => VideoDetailPage(videoData: item.data));
+                      },
+                      onAuthorTap: () {
+                        showTip('作者详情页开发中');
+                      },
+                    );
+                  }
+                  return SizedBox.shrink();
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }

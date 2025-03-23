@@ -61,65 +61,67 @@ class _FollowPageState extends State<FollowPage>
   }
 
   Widget _buildContent() {
-    return NestedScrollView(
-      headerSliverBuilder: (context, innerBoxIsScrolled) {
-        return <Widget>[
-          // 使用SliverAppBar让内容可以滚动到顶部
-          SliverAppBar(
-            // 将高度设置为0可以隐藏AppBar但保留其行为
-            toolbarHeight: 0,
-            // 以下设置允许内容滚动到顶部边缘
-            floating: true,
-            pinned: false,
-            snap: false,
-          ),
-        ];
-      },
-      body: Consumer<FollowViewModel>(
-        builder: (context, viewModel, child) {
-          if (viewModel.items.isEmpty) {
-            if (viewModel.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (viewModel.hasError) {
-              return RetryWidget(onTapRetry: _onRefresh);
-            }
-            return const EmptyWidget();
-          }
-          return LocalizedSmartRefresher(
-            controller: _refreshController,
-            enablePullDown: true,
-            enablePullUp: true,
-            headerStyle: RefreshHeaderStyle.waterDrop,
-            onRefresh: _onRefresh,
-            onLoading: _onLoadMore,
-            child: ListView.builder(
-              itemCount: viewModel.items.length,
-              itemBuilder: (context, index) {
-                final item = viewModel.items[index];
-
-                if (item.type == 'videoCollectionWithBrief') {
-                  return FollowCollection(
-                    item: item,
-                    onTap: (tapItem) {
-                      toPage(() => VideoDetailPage(videoData: tapItem.data));
-                    },
-                  );
-                } else if (item.type ==
-                    'videoCollectionOfHorizontalScrollCard') {
-                  return DailyItemCollectionFollow(
-                    item: item,
-                    onTap: (tapItem) {
-                      toPage(() => VideoDetailPage(videoData: tapItem.data));
-                    },
-                  );
-                }
-
-                return const SizedBox.shrink();
-              },
+    return Scaffold(
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return <Widget>[
+            // 使用SliverAppBar让内容可以滚动到顶部
+            SliverAppBar(
+              // 将高度设置为0可以隐藏AppBar但保留其行为
+              toolbarHeight: 0,
+              // 以下设置允许内容滚动到顶部边缘
+              floating: true,
+              pinned: false,
+              snap: true,
             ),
-          );
+          ];
         },
+        body: Consumer<FollowViewModel>(
+          builder: (context, viewModel, child) {
+            if (viewModel.items.isEmpty) {
+              if (viewModel.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (viewModel.hasError) {
+                return RetryWidget(onTapRetry: _onRefresh);
+              }
+              return const EmptyWidget();
+            }
+            return LocalizedSmartRefresher(
+              controller: _refreshController,
+              enablePullDown: true,
+              enablePullUp: true,
+              headerStyle: RefreshHeaderStyle.waterDrop,
+              onRefresh: _onRefresh,
+              onLoading: _onLoadMore,
+              child: ListView.builder(
+                itemCount: viewModel.items.length,
+                itemBuilder: (context, index) {
+                  final item = viewModel.items[index];
+
+                  if (item.type == 'videoCollectionWithBrief') {
+                    return FollowCollection(
+                      item: item,
+                      onTap: (tapItem) {
+                        toPage(() => VideoDetailPage(videoData: tapItem.data));
+                      },
+                    );
+                  } else if (item.type ==
+                      'videoCollectionOfHorizontalScrollCard') {
+                    return DailyItemCollectionFollow(
+                      item: item,
+                      onTap: (tapItem) {
+                        toPage(() => VideoDetailPage(videoData: tapItem.data));
+                      },
+                    );
+                  }
+
+                  return const SizedBox.shrink();
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }
