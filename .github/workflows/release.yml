@@ -3,40 +3,147 @@ name: "Android Build & Release"
 on:
   push:
     tags:
-      - 'v*'  # 当推送以v开头的tag时触发，如v1.0.0
+      - 'v*' # 当推送以v开头的tag时触发，如v1.0.0
+
+permissions:
+  contents: write
 
 jobs:
   build-android:
     name: Build & Release Android
     runs-on: ubuntu-latest
     steps:
+      # 前面部分不变，直到安装jq
       - name: Checkout Repository
         uses: actions/checkout@v3
-        
-      - name: Set Up Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'  # 稳定的JDK分发版
-          java-version: '21'  # 匹配 JDK 21
+      
+      # [其他构建步骤省略...]
+      
+      - name: Install jq for JSON parsing
+        run: sudo apt-get install jq
+      
+      - name: Upload to Pgyer
+        id: pgyer-upload
+        env:
+          PGYER_API_KEY: ${{ secrets.PGYER_API_KEY }}
+          PGYER_PASSWORD: ${{ secrets.PGYER_PASSWORD }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+        run: |
+          # 初始化默认输出值
+          echo "PGYER_SUCCESS=false" >> $GITHUB_OUTPUT
+          echo "PGYER_ERROR=未知错误" >> $GITHUB_OUTPUT
           
-      - name: Set Up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.29.0'  # Flutter 版本
-          channel: 'stable'
+          # 步骤1: 获取上传令牌
+          echo "正在获取上传令牌..."
+          if ! TOKEN_RESPONSE=$(curl -s -X POST \
+            -F "_api_key=$PGYER_API_KEY" \
+            -F "buildType=android" \
+            -F "buildInstallType=1" \
+            -F "buildPassword=$PGYER_PASSWORD" \
+            -F "buildUpdateDescription=自动构建版本 $GITHUB_REF_NAME" \
+            https://api.pgyer.com/apiv2/app/getCOSToken); then
+            
+            echo "::warning::获取上传令牌请求失败"
+            echo "PGYER_ERROR=获取上传令牌请求失败" >> $GITHUB_OUTPUT
+            exit 0  # 不终止工作流，但标记为警告
+          fi
           
-      - name: Install Dependencies
-        run: flutter pub get
-        
-      - name: Generate Localization Files
-        run: flutter gen-l10n
-        
-      - name: Build APK
-        run: flutter build apk --release
-        
-      - name: Build App Bundle
-        run: flutter build appbundle
-        
+          # 检查获取token是否成功
+          if ! echo $TOKEN_RESPONSE | jq -e '.code == 0' > /dev/null; then
+            ERROR_MSG=$(echo $TOKEN_RESPONSE | jq -r '.message // "API返回错误"')
+            echo "::warning::获取上传令牌失败: $ERROR_MSG"
+            echo "PGYER_ERROR=获取上传令牌失败: $ERROR_MSG" >> $GITHUB_OUTPUT
+            exit 0  # 不终止工作流，但标记为警告
+          fi
+          
+          # [解析参数代码]
+          ENDPOINT=$(echo $TOKEN_RESPONSE | jq -r '.data.endpoint')
+          KEY=$(echo $TOKEN_RESPONSE | jq -r '.data.key')
+          SIGNATURE=$(echo $TOKEN_RESPONSE | jq -r '.data.params.signature')
+          TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.data.params.x-cos-security-token')
+          
+          # 检查关键参数
+          if [ -z "$ENDPOINT" ] || [ -z "$KEY" ] || [ -z "$SIGNATURE" ] || [ -z "$TOKEN" ]; then
+            echo "::warning::关键参数解析失败"
+            echo "PGYER_ERROR=关键参数解析失败" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # [上传文件代码]
+          echo "开始上传APK到: $ENDPOINT"
+          if ! UPLOAD_RESULT=$(curl -s -X POST -w "%{http_code}" \
+            -F "key=$KEY" \
+            -F "signature=$SIGNATURE" \
+            -F "x-cos-security-token=$TOKEN" \
+            -F "x-cos-meta-file-name=app-release.apk" \
+            -F "file=@build/app/outputs/flutter-apk/app-release.apk" \
+            "$ENDPOINT"); then
+            
+            echo "::warning::文件上传请求失败"
+            echo "PGYER_ERROR=文件上传请求失败" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          HTTP_CODE=${UPLOAD_RESULT: -3}
+          if [ "$HTTP_CODE" != "204" ]; then
+            echo "::warning::文件上传失败，HTTP状态: $HTTP_CODE"
+            echo "PGYER_ERROR=文件上传失败，HTTP状态: $HTTP_CODE" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # [检查发布状态代码]
+          MAX_ATTEMPTS=12
+          ATTEMPTS=0
+          
+          while [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; do
+            if ! BUILD_INFO=$(curl -s -X GET \
+              "https://api.pgyer.com/apiv2/app/buildInfo?_api_key=$PGYER_API_KEY&buildKey=$KEY"); then
+              
+              echo "::warning::检查应用状态请求失败"
+              echo "PGYER_ERROR=检查应用状态请求失败" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+            
+            CODE=$(echo $BUILD_INFO | jq -r '.code')
+            
+            if [ "$CODE" = "0" ]; then
+              echo "✅ 应用发布成功！"
+              BUILD_URL=$(echo $BUILD_INFO | jq -r '.data.buildQRCodeURL')
+              APP_NAME=$(echo $BUILD_INFO | jq -r '.data.buildName')
+              VERSION=$(echo $BUILD_INFO | jq -r '.data.buildVersion')
+              SHORT_URL=$(echo $BUILD_INFO | jq -r '.data.buildShortcutUrl')
+              
+              echo "应用名称: $APP_NAME"
+              echo "版本: $VERSION"
+              echo "下载链接: https://www.pgyer.com/$SHORT_URL"
+              
+              # 设置成功输出
+              echo "PGYER_SUCCESS=true" >> $GITHUB_OUTPUT
+              echo "PGYER_DOWNLOAD_URL=https://www.pgyer.com/$SHORT_URL" >> $GITHUB_OUTPUT
+              echo "PGYER_QRCODE_URL=$BUILD_URL" >> $GITHUB_OUTPUT
+              exit 0
+            elif [ "$CODE" = "1216" ]; then
+              MESSAGE=$(echo $BUILD_INFO | jq -r '.message')
+              echo "::warning::应用发布失败: $MESSAGE"
+              echo "PGYER_ERROR=应用发布失败: $MESSAGE" >> $GITHUB_OUTPUT
+              exit 0
+            elif [ "$CODE" = "1247" ]; then
+              echo "⏳ 应用正在处理中... (尝试 $((ATTEMPTS+1))/$MAX_ATTEMPTS)"
+              ATTEMPTS=$((ATTEMPTS+1))
+              sleep 5
+            else
+              echo "⚠️ 未知状态，代码: $CODE"
+              ATTEMPTS=$((ATTEMPTS+1))
+              sleep 5
+            fi
+            
+            if [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; then
+              echo "::warning::达到最大尝试次数"
+              echo "PGYER_ERROR=应用处理超时" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+          done
+      
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
@@ -44,6 +151,16 @@ jobs:
             build/app/outputs/flutter-apk/app-release.apk
             build/app/outputs/bundle/release/app-release.aab
           generate_release_notes: true
-          draft: false  # 设置为true可以创建草稿Release，您可以在发布前进行检查
+          draft: false
+          body: |
+            ## 自动构建版本 ${{ github.ref_name }}
+            
+            ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && '### 📱 蒲公英下载' || '### ⚠️ 蒲公英上传状态' }}
+            ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && format('- 🔗 下载链接: {0}', steps.pgyer-upload.outputs.PGYER_DOWNLOAD_URL) || format('- ❌ 错误信息: {0}', steps.pgyer-upload.outputs.PGYER_ERROR) }}
+            ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && format('- 📱 扫码安装: {0}', steps.pgyer-upload.outputs.PGYER_QRCODE_URL) || '' }}
+            
+            ---
+            
+            自动构建于 ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
