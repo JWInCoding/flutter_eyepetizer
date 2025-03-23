@@ -26,7 +26,12 @@ cd flutter_eyepetizer
 flutter pub get
 ```
 
-4. 运行项目
+4. 生成多语言文件
+```bash
+flutter gen-l10n
+```
+
+5. 运行项目
 ```bash
 flutter run
 ```
