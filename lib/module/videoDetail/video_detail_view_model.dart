@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
-import 'package:flutter_eyepetizer/config/api.dart';
+import 'package:flutter_eyepetizer/config/Api.dart';
 import 'package:lib_net/lib_net.dart';
 
 class VideoDetailViewModel extends ChangeNotifier {
