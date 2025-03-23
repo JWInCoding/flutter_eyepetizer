@@ -1,0 +1,46 @@
+name: "Build & Release"
+
+on:
+  push:
+    tags:
+      - 'v*'  # 当推送以v开头的tag时触发，如v1.0.0
+
+jobs:
+  build:
+    name: Build & Release
+    runs-on: ubuntu-latest  # 如需构建iOS版本，使用macos-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        
+      - name: Set Up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'oracle'
+          java-version: '17'
+          
+      - name: Set Up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.2'  # 根据您的项目需要调整版本
+          channel: 'stable'
+          
+      - name: Install Dependencies
+        run: flutter pub get
+        
+      - name: Build APK
+        run: flutter build apk --release
+        
+      # 如果需要构建App Bundle
+      - name: Build App Bundle
+        run: flutter build appbundle
+        
+      # 创建GitHub Release
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/bundle/release/app-release.aab
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
