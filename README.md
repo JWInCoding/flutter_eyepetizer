@@ -1,16 +1,40 @@
-# flutter_eyepetizer
+# 开眼
+一个使用 Flutter 开发的 开眼 第三方客户端应用，提供了 开眼 App 的主要功能和内容展示。
 
-A new Flutter project.
+## 开始使用
 
-## Getting Started
+### 环境要求
 
-This project is a starting point for a Flutter application.
+- Flutter 3.29.0 或更高版本
+- Dart 3.7.0 或更高版本
+- DevTools 2.42.2 或更高版本
 
-A few resources to get you started if this is your first Flutter project:
+### 安装步骤
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+1. 克隆项目
+```bash
+git clone https://github.com/JWInCoding/flutter_eyepetizer.git
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+2. 进入项目目录
+```bash
+cd flutter_eyepetizer
+```
+
+3. 获取依赖
+```bash
+flutter pub get
+```
+
+4. 运行项目
+```bash
+flutter run
+```
+
+ [参考 API](https://github.com/huanghui0906/API/blob/master/Eyepetizer.md#discovery)
+
+安卓可以下载安装包体验
+
+![](/ADhJVBk8.png)
+
+iOS 需要自行编译
