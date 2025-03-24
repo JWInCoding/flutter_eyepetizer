@@ -7,6 +7,8 @@ AppBar appBar(
   bool showBack = true,
   List<Widget>? actions,
   PreferredSizeWidget? bottom,
+  Color? foregroundColor,
+  Color? backgroundColor,
 }) {
   final appBarTheme = Theme.of(context).appBarTheme;
   final brightness = Theme.of(context).brightness;
@@ -31,7 +33,7 @@ AppBar appBar(
     title: Text(
       title,
       style: TextStyle(
-        color: appBarTheme.foregroundColor,
+        color: foregroundColor ?? appBarTheme.foregroundColor,
         fontSize: 18,
         fontWeight: FontWeight.bold,
       ),
@@ -39,8 +41,11 @@ AppBar appBar(
     systemOverlayStyle: systemUiOverlayStyle,
     centerTitle: true,
     elevation: 0,
-    backgroundColor: appBarTheme.backgroundColor,
-    leading: showBack ? BackButton(color: appBarTheme.foregroundColor) : null,
+    backgroundColor: backgroundColor ?? appBarTheme.backgroundColor,
+    leading:
+        showBack
+            ? BackButton(color: foregroundColor ?? appBarTheme.foregroundColor)
+            : null,
     actions: actions,
     bottom: bottom,
   );

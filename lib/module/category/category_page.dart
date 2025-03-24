@@ -23,6 +23,8 @@ class _CategoryPageState extends State<CategoryPage>
   bool _isLoading = true;
   bool _hasError = false;
   List<CategoryModel> _categoryList = [];
+  // 用于存储每个分类ID对应的颜色
+  final Map<int, Color> _categoryColors = {};
 
   final math.Random _random = math.Random();
 
@@ -40,8 +42,17 @@ class _CategoryPageState extends State<CategoryPage>
         fromJson: (json) => CategoryModel.fromJsonList(json as List),
       );
 
+      // 为每个分类预先分配一个颜色
+      final Map<int, Color> colors = {};
+      if (response != null) {
+        for (var category in response) {
+          colors[category.id] = _getRandomColor();
+        }
+      }
+
       setState(() {
         _categoryList = response!;
+        _categoryColors.addAll(colors);
         _isLoading = false;
         // 在数据加载完成后初始化TabController
       });
@@ -148,7 +159,12 @@ class _CategoryPageState extends State<CategoryPage>
 
                 return GestureDetector(
                   onTap: () {
-                    toPage(() => CategoryDetailPage(category: category));
+                    toPage(
+                      () => CategoryDetailPage(
+                        category: category,
+                        appbarBackgroundColor: _categoryColors[category.id],
+                      ),
+                    );
                   },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
@@ -159,7 +175,8 @@ class _CategoryPageState extends State<CategoryPage>
                         Container(
                           width: itemWidth,
                           height: itemHeight,
-                          color: _getRandomColor(),
+                          color:
+                              _categoryColors[category.id] ?? _getRandomColor(),
                         ),
                         // 图片
                         CacheImage.network(

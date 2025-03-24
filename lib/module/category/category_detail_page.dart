@@ -12,9 +12,15 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class CategoryDetailPage extends StatefulWidget {
-  const CategoryDetailPage({super.key, required this.category});
+  const CategoryDetailPage({
+    super.key,
+    required this.category,
+    this.appbarBackgroundColor,
+  });
 
   final CategoryModel category;
+  final Color? appbarBackgroundColor;
+
   @override
   State<CategoryDetailPage> createState() => _CategoryDetailPageState();
 }
@@ -64,8 +70,15 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
   }
 
   Widget _buildContent() {
+    final appbarColor = widget.appbarBackgroundColor;
+    final appbarForegroundColor = appbarColor != null ? Colors.white : null;
     return Scaffold(
-      appBar: appBar(context, widget.category.name),
+      appBar: appBar(
+        context,
+        widget.category.name,
+        foregroundColor: appbarForegroundColor,
+        backgroundColor: appbarColor,
+      ),
       body: Consumer<CategoryDetailViewModel>(
         builder: (context, viewModel, child) {
           if (viewModel.items.isEmpty) {
