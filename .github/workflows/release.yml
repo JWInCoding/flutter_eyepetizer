@@ -24,11 +24,11 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      # 直接设置Flutter - 基于您的.fvmrc文件
+      
       - name: Set Up Flutter
-        uses: subosito/flutter-action@v3
+        uses: subosito/flutter-action@v2
         with:
-          channel: 'stable' # 根据您的.fvmrc文件内容设置
+          channel: 'stable'
           cache: true
 
       # 打印Flutter版本信息以便调试
