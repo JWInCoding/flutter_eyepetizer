@@ -222,18 +222,26 @@ jobs:
           generate_release_notes: true
           draft: false
           body: |
-            ## 开眼 App 自动构建版本 ${{ github.ref_name }}
+            # 开眼 App 自动构建版本 ${{ github.ref_name }}
+
+            ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && '## 📱 蒲公英下载' || '## ⚠️ 蒲公英上传状态' }}
             
-            ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && '### 📱 蒲公英下载' || '### ⚠️ 蒲公英上传状态' }}
-            ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && format('- 🔗 下载链接: {0}', steps.pgyer-upload.outputs.PGYER_DOWNLOAD_URL) || format('- ❌ 错误信息: {0}', steps.pgyer-upload.outputs.PGYER_ERROR) }}
-            ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && format('- 📱 扫码安装: {0}', steps.pgyer-upload.outputs.PGYER_QRCODE_URL) || '' }}
-            ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && format('- 🔧 上传方式: {0}', steps.pgyer-upload.outputs.PGYER_STRATEGY) || '' }}
+            ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && '### 安装方式一：扫描下方二维码' || '' }}
             
-            ### 📦 下载内容
+            ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && format('![安装二维码]({0})', steps.pgyer-upload.outputs.PGYER_QRCODE_URL) || '' }}
             
-            - APK: 适用于直接安装的安卓应用包
-            - AAB: Google Play 应用包格式
+            ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && '### 安装方式二：点击链接' || '' }}
+            ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && format('🔗 [点击此处安装应用]({0})', steps.pgyer-upload.outputs.PGYER_DOWNLOAD_URL) || format('❌ **错误信息**: {0}', steps.pgyer-upload.outputs.PGYER_ERROR) }}
             
+            ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && format('\n🔧 **上传方式**: {0}', steps.pgyer-upload.outputs.PGYER_STRATEGY) || '' }}
+
+            ---
+
+            ## 📦 下载内容
+
+            - **APK**: 适用于直接安装的安卓应用包
+            - **AAB**: Google Play 应用包格式
+
             ---
             
             自动构建于 ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
