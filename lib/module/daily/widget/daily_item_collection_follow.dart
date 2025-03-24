@@ -15,7 +15,7 @@ class DailyItemCollectionFollow extends StatelessWidget {
   Widget build(BuildContext context) {
     // 嵌套集合数据处理
     final nestedItems = item.data.itemList ?? [];
-    if (nestedItems.isEmpty) return SizedBox();
+    if (nestedItems.isEmpty) return SizedBox.shrink();
 
     return Column(
       children: [

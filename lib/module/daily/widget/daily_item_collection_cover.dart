@@ -16,7 +16,7 @@ class DailyItemCollectionCover extends StatelessWidget {
   Widget build(BuildContext context) {
     // 嵌套集合数据处理
     final nestedItems = item.data.itemList ?? [];
-    if (nestedItems.isEmpty) return SizedBox();
+    if (nestedItems.isEmpty) return SizedBox.shrink();
 
     final PageController controller = PageController(
       viewportFraction: 0.9, // 这个值控制每个页面占视口的比例，小于1会显示相邻页面

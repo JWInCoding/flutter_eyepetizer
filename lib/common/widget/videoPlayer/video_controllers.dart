@@ -317,7 +317,7 @@ class _VideoControllersState extends State<VideoControllers>
                                     color: Colors.white,
                                   ),
                         )
-                        : const SizedBox(),
+                        : const SizedBox.shrink(),
               ),
             ),
           ),
@@ -344,7 +344,7 @@ class _VideoControllersState extends State<VideoControllers>
     VideoPlayerController? videoController,
   ) {
     if (videoController == null) {
-      return GestureDetector(onTap: () {}, child: const SizedBox());
+      return GestureDetector(onTap: () {}, child: const SizedBox.shrink());
     }
 
     return GestureDetector(
@@ -384,7 +384,7 @@ class _VideoControllersState extends State<VideoControllers>
           children: [
             _buildPlayAndPauseIcon(controller),
             if (chewieController?.isLive ?? false)
-              const SizedBox()
+              const SizedBox.shrink()
             else
               _buildProgressBar(),
 
@@ -408,7 +408,7 @@ class _VideoControllersState extends State<VideoControllers>
 
   Widget _buildProgressBar() {
     if (controller == null || chewieController == null) {
-      return const Expanded(child: SizedBox());
+      return const Expanded(child: SizedBox.shrink());
     }
 
     return Expanded(
@@ -459,7 +459,7 @@ class _VideoControllersState extends State<VideoControllers>
 
   GestureDetector _buildMuteButton(VideoPlayerController? videoController) {
     if (videoController == null || _latestValue == null) {
-      return GestureDetector(onTap: () {}, child: const SizedBox());
+      return GestureDetector(onTap: () {}, child: const SizedBox.shrink());
     }
 
     return GestureDetector(
@@ -495,7 +495,7 @@ class _VideoControllersState extends State<VideoControllers>
     if (videoController == null ||
         _latestValue == null ||
         chewieController == null) {
-      return const SizedBox();
+      return const SizedBox.shrink();
     }
 
     return GestureDetector(
@@ -534,7 +534,7 @@ class _VideoControllersState extends State<VideoControllers>
 
   GestureDetector _buildExpandButton() {
     if (chewieController == null) {
-      return GestureDetector(onTap: () {}, child: const SizedBox());
+      return GestureDetector(onTap: () {}, child: const SizedBox.shrink());
     }
 
     return GestureDetector(

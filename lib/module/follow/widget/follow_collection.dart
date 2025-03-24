@@ -17,7 +17,7 @@ class FollowCollection extends StatelessWidget {
   Widget build(BuildContext context) {
     // 嵌套集合数据处理
     final nestedItems = item.data.itemList ?? [];
-    if (nestedItems.isEmpty) return SizedBox();
+    if (nestedItems.isEmpty) return SizedBox.shrink();
 
     return Column(
       children: [
@@ -48,7 +48,7 @@ class FollowCollection extends StatelessWidget {
 
     final header = item.data.header;
     if (header == null) {
-      return SizedBox();
+      return SizedBox.shrink();
     }
 
     return Container(
@@ -69,11 +69,13 @@ class FollowCollection extends StatelessWidget {
                     header.title,
                     style: textScheme.titleMedium,
                     overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
                   ),
                   Text(
                     item.data.header?.description ?? "",
                     style: textScheme.titleMedium,
                     overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
                 ],
               ),
