@@ -232,8 +232,7 @@ jobs:
             
             ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && '### 安装方式二：点击链接' || '' }}
             ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && format('🔗 [点击此处安装应用]({0})', steps.pgyer-upload.outputs.PGYER_DOWNLOAD_URL) || format('❌ **错误信息**: {0}', steps.pgyer-upload.outputs.PGYER_ERROR) }}
-            
-            ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && format('\n🔧 **上传方式**: {0}', steps.pgyer-upload.outputs.PGYER_STRATEGY) || '' }}
+                      
 
             ---
 
