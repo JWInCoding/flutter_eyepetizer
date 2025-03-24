@@ -24,14 +24,13 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      
+      # 使用v2版本
       - name: Set Up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
 
-      # 打印Flutter版本信息以便调试
       - name: Flutter Version
         run: flutter --version
 
@@ -50,7 +49,7 @@ jobs:
       - name: Install jq for JSON parsing
         run: sudo apt-get install jq
 
-      # 上传到蒲公英
+      # 修复蒲公英API调用
       - name: Upload to Pgyer
         id: pgyer-upload
         env:
@@ -63,51 +62,55 @@ jobs:
           
           # 获取上传令牌
           echo "正在获取上传令牌..."
-          if ! TOKEN_RESPONSE=$(curl -s -X POST \
+          TOKEN_RESPONSE=$(curl -s -X POST \
             -F "_api_key=$PGYER_API_KEY" \
             -F "buildType=android" \
             -F "buildInstallType=1" \
             -F "buildUpdateDescription=自动构建版本 $GITHUB_REF_NAME" \
-            https://api.pgyer.com/apiv2/app/getCOSToken); then
-            echo "::warning::获取上传令牌请求失败"
-            echo "PGYER_ERROR=获取上传令牌请求失败" >> $GITHUB_OUTPUT
-            exit 0
-          fi
+            https://api.pgyer.com/apiv2/app/getCOSToken)
+          
+          # 输出原始响应以进行调试
+          echo "API响应: $TOKEN_RESPONSE"
           
           # 检查获取token是否成功
-          if ! echo $TOKEN_RESPONSE | jq -e '.code == 0' > /dev/null; then
-            ERROR_MSG=$(echo $TOKEN_RESPONSE | jq -r '.message // "API返回错误"')
+          CODE=$(echo $TOKEN_RESPONSE | jq -r '.code')
+          if [ "$CODE" != "0" ]; then
+            ERROR_MSG=$(echo $TOKEN_RESPONSE | jq -r '.message')
             echo "::warning::获取上传令牌失败: $ERROR_MSG"
             echo "PGYER_ERROR=获取上传令牌失败: $ERROR_MSG" >> $GITHUB_OUTPUT
             exit 0
           fi
           
-          # 解析参数
+          # 解析参数 - 根据官方API文档调整解析路径
           ENDPOINT=$(echo $TOKEN_RESPONSE | jq -r '.data.endpoint')
           KEY=$(echo $TOKEN_RESPONSE | jq -r '.data.key')
           SIGNATURE=$(echo $TOKEN_RESPONSE | jq -r '.data.params.signature')
-          TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.data.params.x-cos-security-token')
+          TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.data.params."x-cos-security-token"')
+          
+          echo "解析得到的参数:"
+          echo "ENDPOINT: $ENDPOINT"
+          echo "KEY: $KEY"
+          echo "SIGNATURE: $SIGNATURE"
+          echo "TOKEN: $TOKEN"
           
           # 检查关键参数
           if [ -z "$ENDPOINT" ] || [ -z "$KEY" ] || [ -z "$SIGNATURE" ] || [ -z "$TOKEN" ]; then
-            echo "::warning::关键参数解析失败"
+            echo "::warning::关键参数解析失败，请检查API响应格式"
             echo "PGYER_ERROR=关键参数解析失败" >> $GITHUB_OUTPUT
             exit 0
           fi
           
           # 上传文件
           echo "开始上传APK到: $ENDPOINT"
-          if ! UPLOAD_RESULT=$(curl -s -X POST -w "%{http_code}" \
+          UPLOAD_RESULT=$(curl -s -X POST -w "%{http_code}" \
             -F "key=$KEY" \
             -F "signature=$SIGNATURE" \
             -F "x-cos-security-token=$TOKEN" \
             -F "x-cos-meta-file-name=app-release.apk" \
             -F "file=@build/app/outputs/flutter-apk/app-release.apk" \
-            "$ENDPOINT"); then
-            echo "::warning::文件上传请求失败"
-            echo "PGYER_ERROR=文件上传请求失败" >> $GITHUB_OUTPUT
-            exit 0
-          fi
+            "$ENDPOINT")
+          
+          echo "上传结果: $UPLOAD_RESULT"
           
           HTTP_CODE=${UPLOAD_RESULT: -3}
           if [ "$HTTP_CODE" != "204" ]; then
@@ -116,16 +119,16 @@ jobs:
             exit 0
           fi
           
+          echo "文件上传成功，开始检查应用发布状态..."
+          
           # 检查发布状态
           MAX_ATTEMPTS=12
           ATTEMPTS=0
           while [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; do
-            if ! BUILD_INFO=$(curl -s -X GET \
-              "https://api.pgyer.com/apiv2/app/buildInfo?_api_key=$PGYER_API_KEY&buildKey=$KEY"); then
-              echo "::warning::检查应用状态请求失败"
-              echo "PGYER_ERROR=检查应用状态请求失败" >> $GITHUB_OUTPUT
-              exit 0
-            fi
+            BUILD_INFO=$(curl -s -X GET \
+              "https://api.pgyer.com/apiv2/app/buildInfo?_api_key=$PGYER_API_KEY&buildKey=$KEY")
+            
+            echo "尝试 $((ATTEMPTS+1))/$MAX_ATTEMPTS - API响应: $BUILD_INFO"
             
             CODE=$(echo $BUILD_INFO | jq -r '.code')
             if [ "$CODE" = "0" ]; then
