@@ -21,14 +21,22 @@ jobs:
       - name: Set Up Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin' # 稳定的JDK分发版
-          java-version: '21' # 匹配 JDK 21
+          distribution: 'temurin'
+          java-version: '21'
 
-      # 读取FVM配置
+      # 手动读取.fvmrc文件
       - name: Read FVM config
-        id: fvm-config-action
-        uses: kuhnroyal/flutter-fvm-config-action@v1
-        
+        id: read-flutter-version
+        run: |
+          if [ -f ".fvmrc" ]; then
+            FLUTTER_VERSION=$(cat .fvmrc | grep -o '"flutter": *"[^"]*"' | cut -d'"' -f4)
+            echo "FLUTTER_VERSION=$FLUTTER_VERSION" >> $GITHUB_ENV
+            echo "读取到Flutter版本: $FLUTTER_VERSION"
+          else
+            echo "找不到.fvmrc文件，使用默认版本stable"
+            echo "FLUTTER_VERSION=stable" >> $GITHUB_ENV
+          fi
+
       # 设置Flutter缓存
       - name: Setup Flutter cache
         uses: actions/cache@v3
@@ -36,16 +44,16 @@ jobs:
           path: |
             ~/.pub-cache
             ~/.flutter
-          key: ${{ runner.os }}-flutter-${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+          key: ${{ runner.os }}-flutter-${{ env.FLUTTER_VERSION }}
           restore-keys: |
             ${{ runner.os }}-flutter-
 
-      # 基于FVM配置设置Flutter
+      # 设置Flutter
       - name: Set Up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: 'stable'
+          channel: ${{ env.FLUTTER_VERSION == 'stable' || env.FLUTTER_VERSION == 'beta' || env.FLUTTER_VERSION == 'master' || env.FLUTTER_VERSION == 'dev' ? env.FLUTTER_VERSION : 'stable' }}
 
       # 使用直接安装的Flutter，不再使用FVM命令前缀
       - name: Install Dependencies
