@@ -39,9 +39,6 @@ jobs:
       - name: Build APK
         run: flutter build apk --release
 
-      - name: Build App Bundle
-        run: flutter build appbundle
-
       - name: Install jq for JSON parsing
         run: sudo apt-get install jq
 
@@ -54,19 +51,15 @@ jobs:
           # 初始化默认输出值
           echo "PGYER_SUCCESS=false" >> $GITHUB_OUTPUT
           echo "PGYER_ERROR=未知错误" >> $GITHUB_OUTPUT
-          
           # ====== 策略1: 使用推荐的新版两步上传API ======
           echo "策略1: 使用新版两步上传API..."
-          
           # 1. 获取上传令牌
           echo "正在获取上传令牌..."
           TOKEN_RESPONSE=$(curl -s -X POST \
-            -H "Content-Type: application/x-www-form-urlencoded" \
-            -d "_api_key=$PGYER_API_KEY&buildType=android&buildInstallType=1&buildUpdateDescription=自动构建版本 $GITHUB_REF_NAME" \
-            https://api.pgyer.com/apiv2/app/getCOSToken)
-          
+           -H "Content-Type: application/x-www-form-urlencoded" \
+           -d "_api_key=$PGYER_API_KEY&buildType=android&buildInstallType=1&buildUpdateDescription=自动构建版本 $GITHUB_REF_NAME" \
+           https://api.pgyer.com/apiv2/app/getCOSToken)
           echo "令牌响应: $(echo $TOKEN_RESPONSE | jq '.')"
-          
           # 检查获取token是否成功
           CODE=$(echo $TOKEN_RESPONSE | jq -r '.code')
           if [ "$CODE" != "0" ]; then
@@ -79,7 +72,6 @@ jobs:
             KEY=$(echo $TOKEN_RESPONSE | jq -r '.data.key')
             SIGNATURE=$(echo $TOKEN_RESPONSE | jq -r '.data.params.signature')
             TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.data.params."x-cos-security-token"')
-            
             # 检查关键参数
             if [ -z "$ENDPOINT" ] || [ -z "$KEY" ] || [ -z "$SIGNATURE" ] || [ -z "$TOKEN" ]; then
               echo "::warning::关键参数解析失败"
@@ -89,13 +81,11 @@ jobs:
               STRATEGY=1
             fi
           fi
-          
           # 如果上面的步骤成功，继续第一个策略
           if [ "$STRATEGY" = "1" ]; then
             # 2. 立即上传文件，减少延迟
             echo "开始上传APK到: $ENDPOINT"
             APK_PATH="build/app/outputs/flutter-apk/app-release.apk"
-            
             # 使用正确的Content-Type和参数格式
             UPLOAD_RESULT=$(curl -s -X POST -i \
               -F "key=$KEY" \
@@ -104,7 +94,6 @@ jobs:
               -F "x-cos-meta-file-name=app-release.apk" \
               -F "file=@$APK_PATH" \
               "$ENDPOINT")
-            
             # 检查HTTP状态码
             if ! echo "$UPLOAD_RESULT" | grep -q "204 No Content"; then
               echo "::warning::文件上传失败"
@@ -113,30 +102,24 @@ jobs:
               STRATEGY=2
             else
               echo "文件上传成功，检查应用发布状态..."
-              
               # 3. 检查发布状态
               MAX_ATTEMPTS=12
               ATTEMPTS=0
               SUCCESS=false
-              
               while [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; do
                 BUILD_INFO=$(curl -s -X GET \
                   "https://api.pgyer.com/apiv2/app/buildInfo?_api_key=$PGYER_API_KEY&buildKey=$KEY")
-                
                 CODE=$(echo $BUILD_INFO | jq -r '.code')
-                
                 if [ "$CODE" = "0" ]; then
                   # 发布成功
                   BUILD_URL=$(echo $BUILD_INFO | jq -r '.data.buildQRCodeURL')
                   BUILD_NAME=$(echo $BUILD_INFO | jq -r '.data.buildName')
                   BUILD_VERSION=$(echo $BUILD_INFO | jq -r '.data.buildVersion')
                   SHORT_URL=$(echo $BUILD_INFO | jq -r '.data.buildShortcutUrl')
-                  
                   echo "✅ 应用发布成功！"
                   echo "应用名称: $BUILD_NAME"
                   echo "版本: $BUILD_VERSION"
                   echo "下载链接: https://www.pgyer.com/$SHORT_URL"
-                  
                   echo "PGYER_SUCCESS=true" >> $GITHUB_OUTPUT
                   echo "PGYER_DOWNLOAD_URL=https://www.pgyer.com/$SHORT_URL" >> $GITHUB_OUTPUT
                   echo "PGYER_QRCODE_URL=$BUILD_URL" >> $GITHUB_OUTPUT
@@ -159,34 +142,28 @@ jobs:
                   ATTEMPTS=$((ATTEMPTS+1))
                   sleep 5
                 fi
-                
                 if [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; then
                   echo "::warning::达到最大尝试次数"
                   echo "切换到备选策略..."
                   STRATEGY=2
                 fi
               done
-              
               # 如果已经成功，不再执行备选策略
               if [ "$SUCCESS" = "true" ]; then
                 exit 0
               fi
             fi
           fi
-          
           # ====== 策略2: 使用旧版单步上传API作为备选方案 ======
           if [ "$STRATEGY" = "2" ]; then
             echo "策略2: 使用旧版单步上传API..."
             APK_PATH="build/app/outputs/flutter-apk/app-release.apk"
-            
             UPLOAD_RESPONSE=$(curl -s -F "file=@$APK_PATH" \
               -F "_api_key=$PGYER_API_KEY" \
               -F "buildInstallType=1" \
               -F "buildUpdateDescription=自动构建版本 $GITHUB_REF_NAME" \
               https://api.pgyer.com/apiv2/app/upload)
-            
             echo "上传响应: $(echo $UPLOAD_RESPONSE | jq '.')"
-            
             CODE=$(echo $UPLOAD_RESPONSE | jq -r '.code')
             if [ "$CODE" = "0" ]; then
               # 上传成功
@@ -195,12 +172,10 @@ jobs:
               BUILD_VERSION=$(echo $UPLOAD_RESPONSE | jq -r '.data.buildVersion')
               SHORT_URL=$(echo $UPLOAD_RESPONSE | jq -r '.data.buildShortcutUrl')
               QR_CODE_URL=$(echo $UPLOAD_RESPONSE | jq -r '.data.buildQRCodeURL')
-              
               echo "✅ 应用上传成功！"
               echo "应用名称: $BUILD_NAME"
               echo "版本: $BUILD_VERSION"
               echo "下载链接: https://www.pgyer.com/$SHORT_URL"
-              
               echo "PGYER_SUCCESS=true" >> $GITHUB_OUTPUT
               echo "PGYER_DOWNLOAD_URL=https://www.pgyer.com/$SHORT_URL" >> $GITHUB_OUTPUT
               echo "PGYER_QRCODE_URL=$QR_CODE_URL" >> $GITHUB_OUTPUT
@@ -218,31 +193,24 @@ jobs:
         with:
           files: |
             build/app/outputs/flutter-apk/app-release.apk
-            build/app/outputs/bundle/release/app-release.aab
           generate_release_notes: true
           draft: false
           body: |
             # 开眼 App 自动构建版本 ${{ github.ref_name }}
 
             ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && '## 📱 蒲公英下载' || '## ⚠️ 蒲公英上传状态' }}
-            
             ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && '### 安装方式一：扫描下方二维码' || '' }}
-            
             ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && format('![安装二维码]({0})', steps.pgyer-upload.outputs.PGYER_QRCODE_URL) || '' }}
-            
             ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && '### 安装方式二：点击链接' || '' }}
             ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && format('🔗 [点击此处安装应用]({0})', steps.pgyer-upload.outputs.PGYER_DOWNLOAD_URL) || format('❌ **错误信息**: {0}', steps.pgyer-upload.outputs.PGYER_ERROR) }}
-                      
 
             ---
 
             ## 📦 下载内容
 
             - **APK**: 适用于直接安装的安卓应用包
-            - **AAB**: Google Play 应用包格式
 
             ---
-            
             自动构建于 ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
