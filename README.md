@@ -107,8 +107,6 @@
 
 ### 体验应用
 
-安卓可以下载安装包体验
-
-![](/ADhJVBk8.png)
+安卓用户可以直接从 [GitHub Releases页面](https://github.com/JWInCoding/flutter_eyepetizer/releases) 下载最新APK体验。
 
 iOS 需要自行编译
