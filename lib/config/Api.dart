@@ -2,6 +2,8 @@ class API {
   /// 使用固定的 udid，否则服务器可能验证失败
   static const String udid = 'd2807c895f0348a180148c9dfa6f2feeac0781b5';
 
+  static const String baseUrl = 'https://baobab.kaiyanapp.com/api/';
+
   /// 首页文章
   static const String dailyFirstPage = "v4/tabs/selected";
 

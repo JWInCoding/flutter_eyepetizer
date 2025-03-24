@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/common/utils/cache_manager.dart';
 import 'package:flutter_eyepetizer/common/utils/request_util.dart';
+import 'package:flutter_eyepetizer/config/Api.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 class AppInitialize {
   AppInitialize._();
 
   static Future<void> init() async {
-    configDio(baseUrl: 'https://baobab.kaiyanapp.com/api/');
+    configDio(baseUrl: API.baseUrl);
 
     WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
     FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
