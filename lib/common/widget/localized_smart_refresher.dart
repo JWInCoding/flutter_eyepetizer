@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
@@ -25,7 +27,37 @@ class LocalizedSmartRefresher extends StatelessWidget {
   /// 水滴样式的颜色，仅在 headerStyle 为 waterDrop 时有效
   final Color? waterDropColor;
 
-  const LocalizedSmartRefresher({
+  factory LocalizedSmartRefresher({
+    Key? key,
+    required RefreshController controller,
+    required Widget child,
+    VoidCallback? onRefresh,
+    VoidCallback? onLoading,
+    bool enablePullDown = true,
+    bool enablePullUp = false,
+    RefreshHeaderStyle? headerStyle,
+    Color? waterDropColor,
+  }) {
+    headerStyle ??=
+        Platform.isIOS
+            ? RefreshHeaderStyle.classic
+            : RefreshHeaderStyle.waterDrop;
+
+    return LocalizedSmartRefresher._internal(
+      key: key,
+      controller: controller,
+      onRefresh: onRefresh,
+      onLoading: onLoading,
+      enablePullDown: enablePullDown,
+      enablePullUp: enablePullUp,
+      headerStyle: headerStyle,
+      waterDropColor: waterDropColor,
+      child: child,
+    );
+  }
+
+  // 私有构造函数
+  const LocalizedSmartRefresher._internal({
     super.key,
     required this.controller,
     required this.child,
@@ -33,7 +65,7 @@ class LocalizedSmartRefresher extends StatelessWidget {
     this.onLoading,
     this.enablePullDown = true,
     this.enablePullUp = false,
-    this.headerStyle = RefreshHeaderStyle.classic,
+    required this.headerStyle,
     this.waterDropColor,
   });
 

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/appbar_widget.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
+import 'package:flutter_eyepetizer/common/utils/navigator_util.dart';
+import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
 import 'package:flutter_eyepetizer/common/widget/localized_smart_refresher.dart';
 import 'package:flutter_eyepetizer/common/widget/video_item_layout.dart';
 import 'package:flutter_eyepetizer/module/category/category_detail_view_model.dart';
 import 'package:flutter_eyepetizer/module/category/category_model.dart';
+import 'package:flutter_eyepetizer/module/videoDetail/video_detail_page.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
@@ -67,7 +70,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
         builder: (context, viewModel, child) {
           if (viewModel.items.isEmpty) {
             if (viewModel.isLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: AdaptiveProgressIndicator());
             }
             if (viewModel.hasError) {
               return RetryWidget(onTapRetry: _onRefresh);
@@ -78,7 +81,6 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
             controller: _refreshController,
             enablePullDown: true,
             enablePullUp: true,
-            headerStyle: RefreshHeaderStyle.waterDrop,
             onRefresh: _onRefresh,
             onLoading: _onLoadMore,
             child: ListView.builder(
@@ -86,7 +88,12 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
               itemBuilder: (context, index) {
                 final item = viewModel.items[index];
 
-                return VideoItemLayout(item: item);
+                return VideoItemLayout(
+                  item: item,
+                  onTap: () {
+                    toPage(() => VideoDetailPage(videoData: item.data));
+                  },
+                );
               },
             ),
           );

@@ -6,6 +6,7 @@ import 'package:flutter_eyepetizer/common/utils/cache_image.dart';
 import 'package:flutter_eyepetizer/common/utils/navigator_util.dart';
 import 'package:flutter_eyepetizer/common/utils/request_util.dart';
 import 'package:flutter_eyepetizer/common/utils/toast_utils.dart';
+import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
 import 'package:flutter_eyepetizer/config/Api.dart';
 import 'package:flutter_eyepetizer/module/category/category_detail_page.dart';
 import 'package:flutter_eyepetizer/module/category/category_model.dart';
@@ -105,7 +106,7 @@ class _CategoryPageState extends State<CategoryPage>
   Widget build(BuildContext context) {
     super.build(context);
     if (_isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(body: Center(child: AdaptiveProgressIndicator()));
     }
     if (_hasError) {
       return RetryWidget(onTapRetry: _loadCategoryList);

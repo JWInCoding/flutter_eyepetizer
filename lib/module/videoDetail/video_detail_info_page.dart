@@ -3,6 +3,7 @@ import 'package:flutter_eyepetizer/base/base_page.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 import 'package:flutter_eyepetizer/common/utils/cache_image.dart';
 import 'package:flutter_eyepetizer/common/utils/date_utils.dart';
+import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
 import 'package:flutter_eyepetizer/module/videoDetail/video_detail_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -41,7 +42,9 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
       builder: (context, snapshot) {
         // 如果图片正在加载，显示占位加载指示器
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+            child: AdaptiveProgressIndicator(iosColor: Colors.white),
+          );
         }
         return Container(
           // 背景 - 此时图片已经缓存
@@ -159,7 +162,7 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
     // 如果正在加载且没有数据，显示居中的加载指示器
     if (viewModel.isLoading && viewModel.items.isEmpty) {
       return SliverFillRemaining(
-        child: Center(child: CircularProgressIndicator()),
+        child: Center(child: AdaptiveProgressIndicator(iosColor: Colors.white)),
       );
     }
 

@@ -4,6 +4,7 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/common/utils/date_utils.dart';
 import 'package:flutter_eyepetizer/common/utils/log_utils.dart';
+import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoControllers extends StatefulWidget {
@@ -328,7 +329,7 @@ class _VideoControllersState extends State<VideoControllers>
 
   Widget? _loadingIndicator() {
     return widget.showLoadingOnInitialize
-        ? const CircularProgressIndicator()
+        ? const AdaptiveProgressIndicator(iosColor: Colors.white)
         : null;
   }
 
@@ -565,7 +566,9 @@ class _VideoControllersState extends State<VideoControllers>
         chewieController == null ||
         _latestValue == null) {
       return Center(
-        child: _loadingIndicator() ?? const CircularProgressIndicator(),
+        child:
+            _loadingIndicator() ??
+            const AdaptiveProgressIndicator(iosColor: Colors.white),
       );
     }
 
@@ -611,7 +614,9 @@ class _VideoControllersState extends State<VideoControllers>
                       child: Center(
                         child:
                             _loadingIndicator() ??
-                            const CircularProgressIndicator(),
+                            const AdaptiveProgressIndicator(
+                              iosColor: Colors.white,
+                            ),
                       ),
                     )
                   else

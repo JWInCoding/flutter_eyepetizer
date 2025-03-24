@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_eyepetizer/common/utils/log_utils.dart';
 import 'package:flutter_eyepetizer/common/utils/view_utils.dart';
+import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
 import 'package:flutter_eyepetizer/common/widget/videoPlayer/video_controllers.dart';
 import 'package:video_player/video_player.dart';
 
@@ -146,7 +147,7 @@ class VideoWidgetState extends State<VideoWidget> {
         width: width,
         height: height,
         color: Colors.black,
-        child: Center(child: CircularProgressIndicator()),
+        child: Center(child: AdaptiveProgressIndicator(iosColor: Colors.white)),
       );
     }
 

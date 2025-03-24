@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
 
 class CacheImage {
   /// 私有构造函数，防止实例化
@@ -42,7 +43,12 @@ class CacheImage {
       maxWidthDiskCache: maxWidthDiskCache,
       placeholder:
           (context, url) =>
-              loadingWidget ?? _buildPlaceholderWidget(backgroundColor),
+              loadingWidget ??
+              _buildPlaceholderWidget(
+                backgroundColor,
+                width: width,
+                height: height,
+              ),
       errorWidget:
           (context, url, error) =>
               errorWidget ?? _buildErrorWidget(null, backgroundColor),
@@ -79,10 +85,32 @@ class CacheImage {
   // MARK: - 私有辅助方法
 
   /// 创建加载中Widget - Material风格
-  static Widget _buildPlaceholderWidget(Color? backgroundColor) {
+  /// 创建加载中Widget - 动态计算指示器大小
+  static Widget _buildPlaceholderWidget(
+    Color? backgroundColor, {
+    double? width,
+    double? height,
+  }) {
+    // 计算适当的指示器大小
+    double indicatorSize = 10.0; // 默认最小尺寸
+
+    if (width != null && height != null && height != double.infinity) {
+      // 如果同时提供了宽高且高度不是无限，取较小值的1/4
+      indicatorSize = (width < height ? width : height) / 4;
+    } else if (width != null) {
+      // 只有宽度有效，使用宽度的1/5
+      indicatorSize = width / 5;
+    } else if (height != null && height != double.infinity) {
+      // 只有高度有效且不是无限，使用高度的1/4
+      indicatorSize = height / 4;
+    }
+
+    // 限制在合理范围内(10~40)
+    indicatorSize = indicatorSize.clamp(10.0, 40.0);
+
     return Container(
       color: backgroundColor ?? _defaultPlaceholderColor,
-      child: const Center(child: CircularProgressIndicator()),
+      child: Center(child: AdaptiveProgressIndicator(size: indicatorSize)),
     );
   }
 

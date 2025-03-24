@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
 import 'package:flutter_eyepetizer/common/utils/navigator_util.dart';
+import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
 import 'package:flutter_eyepetizer/common/widget/localized_smart_refresher.dart';
 import 'package:flutter_eyepetizer/module/daily/widget/daily_item_collection_follow.dart';
 import 'package:flutter_eyepetizer/module/follow/viewModel/follow_view_model.dart';
@@ -80,7 +81,7 @@ class _FollowPageState extends State<FollowPage>
           builder: (context, viewModel, child) {
             if (viewModel.items.isEmpty) {
               if (viewModel.isLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(child: AdaptiveProgressIndicator());
               }
               if (viewModel.hasError) {
                 return RetryWidget(onTapRetry: _onRefresh);
@@ -91,7 +92,6 @@ class _FollowPageState extends State<FollowPage>
               controller: _refreshController,
               enablePullDown: true,
               enablePullUp: true,
-              headerStyle: RefreshHeaderStyle.waterDrop,
               onRefresh: _onRefresh,
               onLoading: _onLoadMore,
               child: ListView.builder(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
 import 'package:flutter_eyepetizer/common/utils/request_util.dart';
 import 'package:flutter_eyepetizer/common/utils/toast_utils.dart';
+import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
 import 'package:flutter_eyepetizer/config/Api.dart';
 import 'package:flutter_eyepetizer/module/hot/hot_list_page.dart';
 import 'package:flutter_eyepetizer/module/hot/tabinfo_model.dart';
@@ -64,7 +65,7 @@ class _HotPageState extends State<HotPage>
 
     if (_isLoading) {
       return const Scaffold(
-        body: Center(child: Center(child: CircularProgressIndicator())),
+        body: Center(child: Center(child: AdaptiveProgressIndicator())),
       );
     }
     if (_hasError) {

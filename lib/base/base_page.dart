@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
 import 'package:flutter_eyepetizer/config/string.dart';
 
 mixin BasePage<T extends StatefulWidget> on State<T> {
@@ -18,7 +19,7 @@ mixin BasePage<T extends StatefulWidget> on State<T> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(),
+              AdaptiveProgressIndicator(),
               Padding(
                 padding: EdgeInsets.only(top: 25),
                 child: Text(loadingText),
