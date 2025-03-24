@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_eyepetizer/module/category/category_page.dart';
 import 'package:flutter_eyepetizer/module/daily/daily_page.dart';
-import 'package:flutter_eyepetizer/module/follow/follow_page.dart';
+import 'package:flutter_eyepetizer/module/discovery/discovery_page.dart';
 import 'package:flutter_eyepetizer/module/hot/hot_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -18,9 +17,8 @@ class _MainPageState extends State<MainPage> {
 
   final List<Widget> _pages = [
     const DailyPage(),
+    const DiscoveryPage(),
     const HotPage(),
-    const CategoryPage(),
-    const FollowPage(),
   ];
 
   @override
@@ -48,19 +46,14 @@ class _MainPageState extends State<MainPage> {
               label: '日报',
             ),
             BottomNavigationBarItem(
+              icon: Icon(Icons.explore_outlined),
+              activeIcon: Icon(Icons.explore),
+              label: '发现',
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.bookmark_outline),
               activeIcon: Icon(Icons.bookmark),
               label: '热门',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.category_outlined),
-              activeIcon: Icon(Icons.category),
-              label: '分类',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.subscriptions_outlined),
-              activeIcon: Icon(Icons.subscriptions),
-              label: '关注',
             ),
           ],
         ),

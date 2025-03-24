@@ -89,6 +89,7 @@ class _HotPageState extends State<HotPage>
               width: 2,
             ),
           ),
+          indicatorPadding: EdgeInsets.only(bottom: 5.0),
           tabAlignment: TabAlignment.start,
           dividerHeight: 0,
           isScrollable: true,
