@@ -93,9 +93,21 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
           // 类型、日期
           Padding(
             padding: EdgeInsets.only(left: 10, top: 10),
-            child: Text(
-              '#$titlePgc   ${formatDateMsByYMDHM(widget.videoData.author.latestReleaseTime)}',
-              style: TextStyle(color: Colors.white60, fontSize: 12),
+            child: Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    '#$titlePgc',
+                    style: TextStyle(color: Colors.white60, fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+                Text(
+                  '   ${formatDateMsByYMDHM(widget.videoData.author.latestReleaseTime)}',
+                  style: TextStyle(color: Colors.white60, fontSize: 12),
+                ),
+              ],
             ),
           ),
           // 简介
