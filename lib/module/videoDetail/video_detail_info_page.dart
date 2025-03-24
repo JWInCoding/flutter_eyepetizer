@@ -66,6 +66,11 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
 
   /// 当前视频信息
   SliverToBoxAdapter _buildVideoInfo() {
+    final titlePgc =
+        widget.videoData.titlePgc.isEmpty
+            ? widget.videoData.category
+            : widget.videoData.titlePgc;
+
     return SliverToBoxAdapter(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,7 +91,7 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
           Padding(
             padding: EdgeInsets.only(left: 10, top: 10),
             child: Text(
-              '#${widget.videoData.titlePgc}   ${formatDateMsByYMDHM(widget.videoData.author.latestReleaseTime)}',
+              '#$titlePgc   ${formatDateMsByYMDHM(widget.videoData.author.latestReleaseTime)}',
               style: TextStyle(color: Colors.white60, fontSize: 12),
             ),
           ),
@@ -187,7 +192,7 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
     } else if (item.data.text != null && item.data.text!.isNotEmpty) {
       return _buildTextItem(item);
     }
-    return SizedBox();
+    return SizedBox.shrink();
   }
 
   /// 相关视频列表标题
