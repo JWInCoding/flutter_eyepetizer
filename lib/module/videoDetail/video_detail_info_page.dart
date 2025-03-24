@@ -152,7 +152,10 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
                 animatedTexts: [
                   TypewriterAnimatedText(
                     widget.videoData.description,
-                    speed: Duration(milliseconds: 5),
+                    speed: Duration(
+                      milliseconds:
+                          widget.videoData.description.length < 100 ? 10 : 5,
+                    ),
                     cursor: '',
                   ),
                 ],
