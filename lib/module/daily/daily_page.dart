@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eyepetizer/base/appbar_widget.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
 import 'package:flutter_eyepetizer/common/utils/navigator_util.dart';
 import 'package:flutter_eyepetizer/common/utils/toast_utils.dart';
@@ -69,96 +70,81 @@ class _DailyPageState extends State<DailyPage>
 
   Widget _buildContent() {
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return <Widget>[
-            // 使用SliverAppBar让内容可以滚动到顶部
-            SliverAppBar(
-              // 以下设置允许内容滚动到顶部边缘
-              floating: true,
-              pinned: false,
-              snap: true,
-              title: Text(
-                'eyepetizer',
-                style: TextStyle(
-                  color: Theme.of(context).appBarTheme.titleTextStyle?.color,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    showTip('开发中');
-                  },
-                  icon: Icon(Icons.search),
-                ),
-              ],
-            ),
-          ];
-        },
-        body: Consumer<DailyViewModel>(
-          builder: (context, viewModel, child) {
-            if (viewModel.items.isEmpty) {
-              if (viewModel.isLoading) {
-                return const Center(child: AdaptiveProgressIndicator());
-              }
-              if (viewModel.hasError) {
-                return RetryWidget(onTapRetry: _onRefresh);
-              }
-              return const EmptyWidget();
+      appBar: appBar(
+        context,
+        'eyepetizer',
+        showBack: false,
+        actions: [
+          IconButton(
+            onPressed: () {
+              showTip('开发中');
+            },
+            icon: Icon(Icons.search),
+          ),
+        ],
+      ),
+      body: Consumer<DailyViewModel>(
+        builder: (context, viewModel, child) {
+          if (viewModel.items.isEmpty) {
+            if (viewModel.isLoading) {
+              return const Center(child: AdaptiveProgressIndicator());
             }
+            if (viewModel.hasError) {
+              return RetryWidget(onTapRetry: _onRefresh);
+            }
+            return const EmptyWidget();
+          }
 
-            return LocalizedSmartRefresher(
-              controller: _refreshController,
-              enablePullDown: true,
-              enablePullUp: true,
-              onRefresh: _onRefresh,
-              onLoading: _onLoadMore,
-              child: ListView.builder(
-                itemCount: viewModel.items.length,
-                itemBuilder: (context, index) {
-                  final item = viewModel.items[index];
+          return LocalizedSmartRefresher(
+            controller: _refreshController,
+            enablePullDown: true,
+            enablePullUp: true,
+            onRefresh: _onRefresh,
+            onLoading: _onLoadMore,
+            child: ListView.builder(
+              itemCount: viewModel.items.length,
+              itemBuilder: (context, index) {
+                final item = viewModel.items[index];
 
-                  if (item.type == 'textHeader') {
-                    return DailyTitleHeaderLayout(item);
-                  } else if (item.type == 'videoCollectionWithCover') {
-                    return DailyItemCollectionCover(
-                      item: item,
-                      onTap: (tapItem) {
-                        toPage(() => VideoDetailPage(videoData: tapItem.data));
-                      },
-                    );
-                  } else if (item.type == 'videoCollectionOfFollow') {
-                    return DailyItemCollectionFollow(
-                      item: item,
-                      onTap: (tapItem) {
-                        toPage(() => VideoDetailPage(videoData: tapItem.data));
-                      },
-                    );
-                  } else if (item.type == 'squareCardCollection') {
-                    return DailyItemCollectionFollow(
-                      item: item,
-                      onTap: (tapItem) {
-                        toPage(() => VideoDetailPage(videoData: tapItem.data));
-                      },
-                    );
-                  } else if (item.type == 'video') {
-                    return VideoItemLayout(
-                      item: item,
-                      onTap: () {
-                        toPage(() => VideoDetailPage(videoData: item.data));
-                      },
-                      onAuthorTap: () {
-                        showTip('作者详情页开发中');
-                      },
-                    );
-                  }
-                  return SizedBox.shrink();
-                },
-              ),
-            );
-          },
-        ),
+                if (item.type == 'textHeader') {
+                  return DailyTitleHeaderLayout(item);
+                } else if (item.type == 'videoCollectionWithCover') {
+                  return DailyItemCollectionCover(
+                    item: item,
+                    onTap: (tapItem) {
+                      toPage(() => VideoDetailPage(videoData: tapItem.data));
+                    },
+                  );
+                } else if (item.type == 'videoCollectionOfFollow') {
+                  return DailyItemCollectionFollow(
+                    item: item,
+                    onTap: (tapItem) {
+                      toPage(() => VideoDetailPage(videoData: tapItem.data));
+                    },
+                  );
+                } else if (item.type == 'squareCardCollection') {
+                  return DailyItemCollectionFollow(
+                    item: item,
+                    onTap: (tapItem) {
+                      toPage(() => VideoDetailPage(videoData: tapItem.data));
+                    },
+                  );
+                } else if (item.type == 'video') {
+                  return VideoItemLayout(
+                    item: item,
+                    onTap: () {
+                      toPage(() => VideoDetailPage(videoData: item.data));
+                    },
+                    onAuthorTap: () {
+                      showTip('作者详情页开发中');
+                    },
+                  );
+                }
+                return SizedBox.shrink();
+              },
+            ),
+          );
+        },
       ),
     );
   }

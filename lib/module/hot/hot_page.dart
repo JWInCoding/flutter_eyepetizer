@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eyepetizer/base/appbar_widget.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
 import 'package:flutter_eyepetizer/common/utils/request_util.dart';
 import 'package:flutter_eyepetizer/common/utils/toast_utils.dart';
@@ -31,6 +32,12 @@ class _HotPageState extends State<HotPage>
     _loadHotTabs();
   }
 
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
+  }
+
   void _loadHotTabs() async {
     try {
       TabInfo? response = await HttpGo.instance.get(
@@ -54,12 +61,6 @@ class _HotPageState extends State<HotPage>
   }
 
   @override
-  void dispose() {
-    _tabController?.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     super.build(context);
 
@@ -77,23 +78,31 @@ class _HotPageState extends State<HotPage>
 
     final tabBarTheme = Theme.of(context).tabBarTheme;
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 0,
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: tabBarTheme.labelColor,
-          unselectedLabelColor: tabBarTheme.unselectedLabelColor,
-          indicator: UnderlineTabIndicator(
-            borderSide: BorderSide(
-              color: tabBarTheme.indicatorColor!,
-              width: 2,
+      appBar: appBar(
+        context,
+        'popular',
+        showBack: false,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(30),
+          child: SizedBox(
+            height: 30,
+            child: TabBar(
+              controller: _tabController,
+              labelColor: tabBarTheme.labelColor,
+              unselectedLabelColor: tabBarTheme.unselectedLabelColor,
+              indicator: UnderlineTabIndicator(
+                borderSide: BorderSide(
+                  color: tabBarTheme.indicatorColor!,
+                  width: 2,
+                ),
+              ),
+              indicatorPadding: EdgeInsets.only(bottom: 5.0),
+              tabAlignment: TabAlignment.start,
+              dividerHeight: 0,
+              isScrollable: true,
+              tabs: _tabList.map((e) => Tab(text: e.name, height: 28)).toList(),
             ),
           ),
-          indicatorPadding: EdgeInsets.only(bottom: 5.0),
-          tabAlignment: TabAlignment.start,
-          dividerHeight: 0,
-          isScrollable: true,
-          tabs: _tabList.map((e) => Tab(text: e.name)).toList(),
         ),
       ),
       body: TabBarView(

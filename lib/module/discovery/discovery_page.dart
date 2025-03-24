@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eyepetizer/base/appbar_widget.dart';
 import 'package:flutter_eyepetizer/module/discovery/category/category_page.dart';
 import 'package:flutter_eyepetizer/module/discovery/follow/follow_page.dart';
 
@@ -31,23 +32,31 @@ class _DiscoveryPageState extends State<DiscoveryPage>
     super.build(context);
     final tabBarTheme = Theme.of(context).tabBarTheme;
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 0,
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: tabBarTheme.labelColor,
-          unselectedLabelColor: tabBarTheme.unselectedLabelColor,
-          indicator: UnderlineTabIndicator(
-            borderSide: BorderSide(
-              color: tabBarTheme.indicatorColor!,
-              width: 2,
+      appBar: appBar(
+        context,
+        'discover',
+        showBack: false,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(30),
+          child: SizedBox(
+            height: 30,
+            child: TabBar(
+              controller: _tabController,
+              labelColor: tabBarTheme.labelColor,
+              unselectedLabelColor: tabBarTheme.unselectedLabelColor,
+              indicator: UnderlineTabIndicator(
+                borderSide: BorderSide(
+                  color: tabBarTheme.indicatorColor!,
+                  width: 2,
+                ),
+              ),
+              indicatorPadding: EdgeInsets.only(bottom: 5.0),
+              tabAlignment: TabAlignment.start,
+              dividerHeight: 0,
+              isScrollable: true,
+              tabs: _tabs.map((e) => Tab(text: e, height: 28)).toList(),
             ),
           ),
-          indicatorPadding: EdgeInsets.only(bottom: 5.0),
-          tabAlignment: TabAlignment.start,
-          dividerHeight: 0,
-          isScrollable: true,
-          tabs: _tabs.map((e) => Tab(text: e)).toList(),
         ),
       ),
       body: TabBarView(

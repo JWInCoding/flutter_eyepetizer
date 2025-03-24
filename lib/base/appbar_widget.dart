@@ -36,6 +36,7 @@ AppBar appBar(
         color: foregroundColor ?? appBarTheme.foregroundColor,
         fontSize: 18,
         fontWeight: FontWeight.bold,
+        fontStyle: FontStyle.italic,
       ),
     ),
     systemOverlayStyle: systemUiOverlayStyle,

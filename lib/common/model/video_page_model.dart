@@ -297,7 +297,6 @@ class VideoData {
       collected: json['collected'] ?? false,
       reallyCollected: json['reallyCollected'] ?? false,
       played: json['played'] ?? false,
-      // 新增字段解析
       remark: json['remark'],
       text: json['text'],
       header:

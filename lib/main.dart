@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_eyepetizer/app_initialize.dart';
 import 'package:flutter_eyepetizer/config/theme.dart';
 import 'package:flutter_eyepetizer/main_page.dart';
@@ -10,12 +7,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 
 void main() {
-  if (Platform.isAndroid) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
-    );
-  }
-
   runApp(const MyApp());
 }
 

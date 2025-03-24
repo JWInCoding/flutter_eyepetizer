@@ -103,7 +103,7 @@
 如果使用 FVM，请在 IDE 中配置 Flutter SDK 路径指向：
 `.fvm/flutter_sdk`
 
-[参考 API](https://github.com/huanghui0906/API/blob/master/Eyepetizer.md)
+[参考 开眼 API](https://github.com/huanghui0906/API/blob/master/Eyepetizer.md)
 
 ### 体验应用
 

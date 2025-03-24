@@ -3,7 +3,6 @@ import 'package:flutter_eyepetizer/base/base_page.dart';
 import 'package:flutter_eyepetizer/common/utils/navigator_util.dart';
 import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
 import 'package:flutter_eyepetizer/common/widget/localized_smart_refresher.dart';
-import 'package:flutter_eyepetizer/module/daily/widget/daily_item_collection_follow.dart';
 import 'package:flutter_eyepetizer/module/discovery/follow/viewModel/follow_view_model.dart';
 import 'package:flutter_eyepetizer/module/discovery/follow/widget/follow_collection.dart';
 import 'package:flutter_eyepetizer/module/videoDetail/video_detail_page.dart';
@@ -63,65 +62,38 @@ class _FollowPageState extends State<FollowPage>
 
   Widget _buildContent() {
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return <Widget>[
-            // 使用SliverAppBar让内容可以滚动到顶部
-            SliverAppBar(
-              // 将高度设置为0可以隐藏AppBar但保留其行为
-              toolbarHeight: 0,
-              // 以下设置允许内容滚动到顶部边缘
-              floating: true,
-              pinned: false,
-              snap: true,
-            ),
-          ];
-        },
-        body: Consumer<FollowViewModel>(
-          builder: (context, viewModel, child) {
-            if (viewModel.items.isEmpty) {
-              if (viewModel.isLoading) {
-                return const Center(child: AdaptiveProgressIndicator());
-              }
-              if (viewModel.hasError) {
-                return RetryWidget(onTapRetry: _onRefresh);
-              }
-              return const EmptyWidget();
+      body: Consumer<FollowViewModel>(
+        builder: (context, viewModel, child) {
+          if (viewModel.items.isEmpty) {
+            if (viewModel.isLoading) {
+              return const Center(child: AdaptiveProgressIndicator());
             }
-            return LocalizedSmartRefresher(
-              controller: _refreshController,
-              enablePullDown: true,
-              enablePullUp: true,
-              onRefresh: _onRefresh,
-              onLoading: _onLoadMore,
-              child: ListView.builder(
-                itemCount: viewModel.items.length,
-                itemBuilder: (context, index) {
-                  final item = viewModel.items[index];
+            if (viewModel.hasError) {
+              return RetryWidget(onTapRetry: _onRefresh);
+            }
+            return const EmptyWidget();
+          }
+          return LocalizedSmartRefresher(
+            controller: _refreshController,
+            enablePullDown: true,
+            enablePullUp: true,
+            onRefresh: _onRefresh,
+            onLoading: _onLoadMore,
+            child: ListView.builder(
+              itemCount: viewModel.items.length,
+              itemBuilder: (context, index) {
+                final item = viewModel.items[index];
 
-                  if (item.type == 'videoCollectionWithBrief') {
-                    return FollowCollection(
-                      item: item,
-                      onTap: (tapItem) {
-                        toPage(() => VideoDetailPage(videoData: tapItem.data));
-                      },
-                    );
-                  } else if (item.type ==
-                      'videoCollectionOfHorizontalScrollCard') {
-                    return DailyItemCollectionFollow(
-                      item: item,
-                      onTap: (tapItem) {
-                        toPage(() => VideoDetailPage(videoData: tapItem.data));
-                      },
-                    );
-                  }
-
-                  return const SizedBox.shrink();
-                },
-              ),
-            );
-          },
-        ),
+                return FollowCollection(
+                  item: item,
+                  onTap: (tapItem) {
+                    toPage(() => VideoDetailPage(videoData: tapItem.data));
+                  },
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }
