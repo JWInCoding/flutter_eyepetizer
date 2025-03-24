@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
@@ -78,44 +79,86 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // title
+          // title - 使用打字机效果
+          // 因为使用了文字效果库 AnimatedTextKit，右侧会默认留有光标的位置，所有 padding 的 right 使用 5，才能达到视觉效果的左右间距统一
           Padding(
-            padding: EdgeInsets.only(left: 10, top: 10),
-            child: Text(
-              widget.videoData.title,
+            padding: EdgeInsets.fromLTRB(10, 10, 5, 0),
+            child: DefaultTextStyle(
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
-            ),
-          ),
-          // 类型、日期
-          Padding(
-            padding: EdgeInsets.only(left: 10, top: 10),
-            child: Row(
-              children: [
-                Flexible(
-                  child: Text(
-                    '#$titlePgc',
-                    style: TextStyle(color: Colors.white60, fontSize: 12),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+              child: AnimatedTextKit(
+                animatedTexts: [
+                  TypewriterAnimatedText(
+                    widget.videoData.title,
+                    speed: Duration(milliseconds: 50),
+                    cursor: '', // 移除光标
                   ),
-                ),
-                Text(
-                  '   ${formatDateMsByYMDHM(widget.videoData.author.latestReleaseTime)}',
-                  style: TextStyle(color: Colors.white60, fontSize: 12),
-                ),
-              ],
+                ],
+                isRepeatingAnimation: false,
+                totalRepeatCount: 1,
+              ),
             ),
           ),
+
+          // 类型
+          Padding(
+            padding: EdgeInsets.fromLTRB(10, 10, 5, 0),
+            child: DefaultTextStyle(
+              style: TextStyle(color: Colors.white60, fontSize: 12),
+              child: AnimatedTextKit(
+                animatedTexts: [
+                  TypewriterAnimatedText(
+                    '#$titlePgc',
+                    speed: Duration(milliseconds: 30),
+                    cursor: '', // 移除光标
+                  ),
+                ],
+                isRepeatingAnimation: false,
+                totalRepeatCount: 1,
+              ),
+            ),
+          ),
+
+          // 日期
+          Padding(
+            padding: EdgeInsets.fromLTRB(10, 5, 5, 0),
+            child: DefaultTextStyle(
+              style: TextStyle(color: Colors.white60, fontSize: 12),
+              child: AnimatedTextKit(
+                animatedTexts: [
+                  TypewriterAnimatedText(
+                    formatDateMsByYMDHM(
+                      widget.videoData.author.latestReleaseTime,
+                    ),
+                    speed: Duration(milliseconds: 30),
+                    cursor: '', // 移除光标
+                  ),
+                ],
+                isRepeatingAnimation: false,
+                totalRepeatCount: 1,
+              ),
+            ),
+          ),
+
           // 简介
           Padding(
-            padding: EdgeInsets.only(left: 10, top: 10),
-            child: Text(
-              widget.videoData.description,
+            padding: EdgeInsets.fromLTRB(10, 10, 5, 0),
+            child: DefaultTextStyle(
               style: TextStyle(color: Colors.white, fontSize: 14),
+              child: AnimatedTextKit(
+                animatedTexts: [
+                  TypewriterAnimatedText(
+                    widget.videoData.description,
+                    speed: Duration(milliseconds: 5),
+                    cursor: '',
+                  ),
+                ],
+                isRepeatingAnimation: false,
+                totalRepeatCount: 1,
+              ),
             ),
           ),
           //分割线

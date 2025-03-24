@@ -62,6 +62,8 @@ dependencies:
   dio_cache_interceptor: ^3.5.1
   # GetX
   get: ^4.7.2
+  # 文字显示效果
+  animated_text_kit: ^4.2.3
 
 
 dev_dependencies:
