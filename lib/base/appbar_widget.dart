@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 AppBar appBar(
   BuildContext context,
   String title, {
+  bool centerTitle = true,
   TextStyle? titleStyle,
   bool showBack = true,
   List<Widget>? actions,
@@ -44,9 +45,10 @@ AppBar appBar(
           ),
     ),
     systemOverlayStyle: systemUiOverlayStyle,
-    centerTitle: true,
+    centerTitle: centerTitle,
     elevation: 0,
     backgroundColor: backgroundColor ?? appBarTheme.backgroundColor,
+    titleSpacing: 0,
     leading:
         showBack
             ? BackButton(color: foregroundColor ?? appBarTheme.foregroundColor)

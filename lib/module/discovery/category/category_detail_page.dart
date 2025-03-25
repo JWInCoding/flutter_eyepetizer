@@ -75,7 +75,8 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
     return Scaffold(
       appBar: appBar(
         context,
-        widget.category.name,
+        widget.category.description,
+        centerTitle: false,
         foregroundColor: appbarForegroundColor,
         backgroundColor: appbarColor,
       ),
