@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/appbar_widget.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
+import 'package:flutter_eyepetizer/common/model/tabinfo_model.dart';
 import 'package:flutter_eyepetizer/common/utils/request_util.dart';
 import 'package:flutter_eyepetizer/common/utils/toast_utils.dart';
 import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
 import 'package:flutter_eyepetizer/config/Api.dart';
 import 'package:flutter_eyepetizer/module/hot/hot_list_page.dart';
-import 'package:flutter_eyepetizer/module/hot/tabinfo_model.dart';
 
 class HotPage extends StatefulWidget {
   const HotPage({super.key});
@@ -40,13 +40,13 @@ class _HotPageState extends State<HotPage>
 
   void _loadHotTabs() async {
     try {
-      TabInfo? response = await HttpGo.instance.get(
+      TabInfoModel? response = await HttpGo.instance.get(
         API.rankList,
-        fromJson: (json) => TabInfo.fromJson(json),
+        fromJson: (json) => TabInfoModel.fromJson(json),
       );
 
       setState(() {
-        _tabList = response!.tabList;
+        _tabList = response!.tabInfo?.tabList ?? [];
         _isLoading = false;
         // 在数据加载完成后初始化TabController
         _tabController = TabController(length: _tabList.length, vsync: this);
