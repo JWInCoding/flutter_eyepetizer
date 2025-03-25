@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 AppBar appBar(
   BuildContext context,
   String title, {
+  TextStyle? titleStyle,
   bool showBack = true,
   List<Widget>? actions,
   PreferredSizeWidget? bottom,
@@ -32,12 +33,15 @@ AppBar appBar(
   return AppBar(
     title: Text(
       title,
-      style: TextStyle(
-        color: foregroundColor ?? appBarTheme.foregroundColor,
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-        fontStyle: FontStyle.italic,
-      ),
+      style:
+          titleStyle?.copyWith(
+            color: foregroundColor ?? appBarTheme.foregroundColor,
+          ) ??
+          TextStyle(
+            color: foregroundColor ?? appBarTheme.foregroundColor,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
     ),
     systemOverlayStyle: systemUiOverlayStyle,
     centerTitle: true,

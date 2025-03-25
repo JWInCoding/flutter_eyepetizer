@@ -81,6 +81,11 @@ class _HotPageState extends State<HotPage>
       appBar: appBar(
         context,
         'popular',
+        titleStyle: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          fontStyle: FontStyle.italic,
+        ),
         showBack: false,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(30),
@@ -96,18 +101,26 @@ class _HotPageState extends State<HotPage>
                   width: 2,
                 ),
               ),
-              indicatorPadding: EdgeInsets.only(bottom: 5.0),
+              indicatorPadding: EdgeInsets.only(top: 5.0),
               tabAlignment: TabAlignment.start,
               dividerHeight: 0,
               isScrollable: true,
-              tabs: _tabList.map((e) => Tab(text: e.name, height: 28)).toList(),
+              tabs: _tabList.map((e) => Tab(text: e.name, height: 30)).toList(),
             ),
           ),
         ),
       ),
       body: TabBarView(
         controller: _tabController,
-        children: _tabList.map((e) => HotListPage(apiUrl: e.apiUrl)).toList(),
+        children:
+            _tabList
+                .map(
+                  (e) => Padding(
+                    padding: EdgeInsets.only(top: 5),
+                    child: HotListPage(apiUrl: e.apiUrl),
+                  ),
+                )
+                .toList(),
       ),
     );
   }

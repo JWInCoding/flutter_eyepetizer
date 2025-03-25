@@ -73,6 +73,11 @@ class _DailyPageState extends State<DailyPage>
       appBar: appBar(
         context,
         'eyepetizer',
+        titleStyle: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          fontStyle: FontStyle.italic,
+        ),
         showBack: false,
         actions: [
           IconButton(

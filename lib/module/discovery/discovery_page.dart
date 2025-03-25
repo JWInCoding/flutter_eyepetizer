@@ -35,6 +35,11 @@ class _DiscoveryPageState extends State<DiscoveryPage>
       appBar: appBar(
         context,
         'discover',
+        titleStyle: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          fontStyle: FontStyle.italic,
+        ),
         showBack: false,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(30),
@@ -50,18 +55,21 @@ class _DiscoveryPageState extends State<DiscoveryPage>
                   width: 2,
                 ),
               ),
-              indicatorPadding: EdgeInsets.only(bottom: 5.0),
+              indicatorPadding: EdgeInsets.only(top: 5.0),
               tabAlignment: TabAlignment.start,
               dividerHeight: 0,
               isScrollable: true,
-              tabs: _tabs.map((e) => Tab(text: e, height: 28)).toList(),
+              tabs: _tabs.map((e) => Tab(text: e, height: 30)).toList(),
             ),
           ),
         ),
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [FollowPage(), CategoryPage()],
+        children: [
+          Padding(padding: EdgeInsets.only(top: 5), child: FollowPage()),
+          Padding(padding: EdgeInsets.only(top: 5), child: CategoryPage()),
+        ],
       ),
     );
   }
