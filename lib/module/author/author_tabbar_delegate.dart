@@ -11,7 +11,8 @@ class AuthorTabbarDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return Container(color: Colors.transparent, child: tabBar);
+    final appBarTheme = Theme.of(context).appBarTheme;
+    return Container(color: appBarTheme.backgroundColor, child: tabBar);
   }
 
   @override
