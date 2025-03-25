@@ -6,7 +6,6 @@ import 'package:flutter_eyepetizer/common/utils/date_utils.dart';
 class VideoWidget extends StatelessWidget {
   // 类常量定义
   static const double kAvatarSize = 44.0;
-  static const double kCoverHeight = 230.0;
   static const double kIconSize = 44.0;
   static const double kSmallIconSize = 14.0;
   static const EdgeInsets kInfoPadding = EdgeInsets.fromLTRB(15, 10, 15, 10);
@@ -35,6 +34,7 @@ class VideoWidget extends StatelessWidget {
 
   GestureDetector _buildCover(BuildContext context, VideoItem item) {
     final size = MediaQuery.of(context).size;
+    final coverHeight = size.width / 16 * 9;
     final playIconAlpha =
         Theme.of(context).brightness == Brightness.light ? 1.0 : 0.8;
 
@@ -46,7 +46,7 @@ class VideoWidget extends StatelessWidget {
           CacheImage.network(
             url: item.data.cover.feed,
             width: size.width,
-            height: kCoverHeight,
+            height: coverHeight,
           ),
           Icon(
             Icons.play_arrow,

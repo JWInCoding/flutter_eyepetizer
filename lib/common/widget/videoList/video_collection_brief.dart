@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 import 'package:flutter_eyepetizer/common/utils/cache_image.dart';
@@ -13,23 +11,38 @@ class VideoCollectionBrief extends StatelessWidget {
   final VideoItem item;
   final VideoItemCallback? onTap;
 
+  // 调整内容高度，增加一些缓冲空间
+  final _contentHeight = 280.0; // 增加了5像素的缓冲
+  // size 计算
+  final _verticalPadding = 40.0;
+  final _textAreaHeight = 45.0; // 增加文字区域高度
+  // 图片可用高度
+  double get _imageHeight =>
+      _contentHeight - _verticalPadding - _textAreaHeight;
+
+  // 使用16:9的视频标准宽高比
+  final imageAspectRatio = 16 / 9;
+
+  // 计算卡片宽度
+  double get _cardWidth => _imageHeight * imageAspectRatio;
+
   @override
   Widget build(BuildContext context) {
-    // 嵌套集合数据处理
     final nestedItems = item.data.itemList ?? [];
-    if (nestedItems.isEmpty) return SizedBox.shrink();
+    if (nestedItems.isEmpty) return const SizedBox.shrink();
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start, // 确保对齐一致
       children: [
         _buildHeader(context, item),
         SizedBox(
-          height: 220,
+          height: _contentHeight,
           child: Padding(
-            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: nestedItems.length,
-              padding: EdgeInsets.symmetric(horizontal: 10), // 统一外边距控制
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               itemBuilder: (context, index) {
                 return _buildPageItem(context, nestedItems[index]);
               },
@@ -47,35 +60,41 @@ class VideoCollectionBrief extends StatelessWidget {
 
     final header = item.data.header;
     if (header == null) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
 
     return Container(
-      padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+      padding: const EdgeInsets.fromLTRB(15, 10, 15, 5), // 减少底部padding
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center, // 确保垂直居中
         children: [
           ClipOval(
-            clipBehavior: Clip.antiAlias,
-            child: CacheImage.network(url: header.icon, width: 44, height: 44),
+            child: CacheImage.network(
+              url: header.icon,
+              width: 40,
+              height: 40,
+            ), // 略微减小头像
           ),
           Expanded(
             child: Container(
               padding: const EdgeInsets.only(left: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min, // 使用最小空间
                 children: [
                   Text(
                     header.title,
                     style: textScheme.titleMedium,
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
+                    maxLines: 1, // 限制为1行
                   ),
-                  Text(
-                    item.data.header?.description ?? "",
-                    style: textScheme.titleMedium,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
+                  if (header.description.isNotEmpty)
+                    Text(
+                      header.description,
+                      style: textScheme.bodyMedium, // 使用较小的文字样式
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
                 ],
               ),
             ),
@@ -88,95 +107,108 @@ class VideoCollectionBrief extends StatelessWidget {
   Widget _buildPageItem(BuildContext context, VideoItem item) {
     final theme = Theme.of(context);
     final textScheme = theme.textTheme;
-    final cardWidth = MediaQuery.of(context).size.width * 0.9 - 10;
 
     return GestureDetector(
       onTap: () => onTap?.call(item),
       child: Container(
-        width: cardWidth, // 预计算宽度
-        margin: const EdgeInsets.symmetric(horizontal: 5),
-        child: Stack(
-          fit: StackFit.expand,
+        width: _cardWidth,
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min, // 使用最小空间
           children: [
-            // 背景图片
-            CacheImage.network(url: item.data.cover.feed, fit: BoxFit.cover),
-
-            // 底部渐变效果
-            Positioned.fill(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withValues(alpha: 0.9),
-                    ],
-                    stops: const [0.6, 1.0],
+            // 图片容器
+            Container(
+              height: _imageHeight,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
                   ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CacheImage.network(
+                      url: item.data.cover.feed,
+                      fit: BoxFit.cover,
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        height: 60,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withValues(alpha: 0.5),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (item.data.duration > 0)
+                      Positioned(
+                        right: 8,
+                        bottom: 8,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.6),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            formatDuration(item.data.duration),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),
 
-            // 只对底部区域应用模糊效果 - 更高效
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              height: 60, // 只模糊底部文字区域
-              child: ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                    sigmaX: 3.0, // 降低模糊强度以提高性能
-                    sigmaY: 3.0,
-                  ),
-                  child: Container(color: Colors.transparent), // 空容器，不会占用额外资源
-                ),
-              ),
-            ),
-
-            // 底部文字信息
-            Positioned(
-              left: 15,
-              right: 15,
-              bottom: 15,
+            // 标题和日期 - 优化布局
+            Padding(
+              padding: const EdgeInsets.only(top: 6, left: 2), // 减少顶部padding
               child: Column(
-                mainAxisSize: MainAxisSize.min, // 减少布局计算
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min, // 使用最小空间
                 children: [
                   Text(
                     item.data.title,
-                    style: textScheme.bodySmall?.copyWith(color: Colors.white),
-                    maxLines: 1, // 限制行数提高性能
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
+                    style: textScheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
                   ),
-                  const SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '#${item.data.category}',
-                        style: textScheme.bodySmall?.copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.play_arrow,
-                            color: Colors.white,
-                            size: 14,
-                          ),
-                          const SizedBox(width: 2),
-                          Text(
-                            formatDuration(item.data.duration),
-                            style: textScheme.bodySmall?.copyWith(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                  const SizedBox(height: 2),
+                  Text(
+                    formatDateMsByYMDHM(item.data.releaseTime),
+                    style: textScheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(
+                        alpha: 0.6,
+                      ), // 修正API
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),

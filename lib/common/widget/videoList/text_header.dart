@@ -12,14 +12,16 @@ class TextHeader extends StatelessWidget {
     return Column(
       children: [
         const Divider(),
-        Padding(
-          padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+        Container(
+          alignment: Alignment.center,
+          height: 44,
           child: Text(
             item.data.text ?? "",
             textAlign: TextAlign.center,
-            style: textColorScheme.headlineSmall,
+            style: textColorScheme.titleLarge,
           ),
         ),
+        const Divider(),
       ],
     );
   }
