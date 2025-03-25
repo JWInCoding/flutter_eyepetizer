@@ -3,7 +3,7 @@ import 'package:flutter_eyepetizer/base/appbar_widget.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
 import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
 import 'package:flutter_eyepetizer/common/widget/localized_smart_refresher.dart';
-import 'package:flutter_eyepetizer/common/widget/videoList/video_list_builder.dart';
+import 'package:flutter_eyepetizer/common/widget/video_list_builder.dart';
 import 'package:flutter_eyepetizer/module/discovery/category/category_detail_view_model.dart';
 import 'package:flutter_eyepetizer/module/discovery/category/category_model.dart';
 import 'package:provider/provider.dart';

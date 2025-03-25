@@ -6,7 +6,7 @@ import 'package:flutter_eyepetizer/common/widget/videoList/video_collection_brie
 import 'package:flutter_eyepetizer/common/widget/videoList/video_collection_cover.dart';
 import 'package:flutter_eyepetizer/common/widget/videoList/video_collection_follow.dart';
 import 'package:flutter_eyepetizer/common/widget/videoList/video_collection_horizontal_scroll_card.dart';
-import 'package:flutter_eyepetizer/common/widget/videoList/video_item_layout.dart';
+import 'package:flutter_eyepetizer/common/widget/videoList/video_widget.dart';
 import 'package:flutter_eyepetizer/module/author/author_page.dart';
 import 'package:flutter_eyepetizer/module/videoDetail/video_detail_page.dart';
 
@@ -32,7 +32,7 @@ class VideoListBuilder {
         },
       );
     } else if (item.type == 'video') {
-      return VideoItemLayout(
+      return VideoWidget(
         item: item,
         onTap: () {
           toPage(() => VideoDetailPage(videoData: item.data));

@@ -3,7 +3,7 @@ import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 import 'package:flutter_eyepetizer/common/utils/cache_image.dart';
 import 'package:flutter_eyepetizer/common/utils/date_utils.dart';
 
-class VideoItemLayout extends StatelessWidget {
+class VideoWidget extends StatelessWidget {
   // 类常量定义
   static const double kAvatarSize = 44.0;
   static const double kCoverHeight = 230.0;
@@ -11,7 +11,7 @@ class VideoItemLayout extends StatelessWidget {
   static const double kSmallIconSize = 14.0;
   static const EdgeInsets kInfoPadding = EdgeInsets.fromLTRB(15, 10, 15, 10);
 
-  const VideoItemLayout({
+  const VideoWidget({
     super.key,
     required this.item,
     this.showCategory = true,
