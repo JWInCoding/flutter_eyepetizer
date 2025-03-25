@@ -2,7 +2,6 @@ import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
 import 'package:flutter_eyepetizer/common/model/tabinfo_model.dart';
-import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 import 'package:flutter_eyepetizer/common/utils/cache_image.dart';
 import 'package:flutter_eyepetizer/common/utils/navigator_util.dart';
 import 'package:flutter_eyepetizer/common/utils/request_util.dart';
@@ -13,9 +12,10 @@ import 'package:flutter_eyepetizer/module/author/author_list_page.dart';
 import 'package:flutter_eyepetizer/module/author/author_tabbar_delegate.dart';
 
 class AuthorPage extends StatefulWidget {
-  const AuthorPage({super.key, required this.author});
+  const AuthorPage(this.authorId, {super.key, this.authorIcon});
 
-  final Author author;
+  final int authorId;
+  final String? authorIcon;
 
   @override
   State<AuthorPage> createState() => _AuthorPageState();
@@ -31,10 +31,11 @@ class _AuthorPageState extends State<AuthorPage>
 
   // 页面相关
   TabController? _tabController;
-  late ScrollController _scrollController;
+  ScrollController? _scrollController;
+
   bool get _isShrink =>
-      _scrollController.hasClients &&
-      _scrollController.offset > (200 - kToolbarHeight);
+      _scrollController!.hasClients &&
+      _scrollController!.offset > (200 - kToolbarHeight);
   //记录SliverAppBar上一次的状态
   bool _sliverAppBarLastStatus = true;
 
@@ -42,7 +43,7 @@ class _AuthorPageState extends State<AuthorPage>
     try {
       TabInfoModel? response = await HttpGo.instance.get(
         API.authorTabList,
-        queryParams: {'id': widget.author.id, 'udid': API.udid},
+        queryParams: {'id': widget.authorId, 'udid': API.udid},
         fromJson: (json) => TabInfoModel.fromJson(json),
       );
 
@@ -53,7 +54,7 @@ class _AuthorPageState extends State<AuthorPage>
           // 在数据加载完成后初始化TabController
           _tabController = TabController(length: _tabList.length, vsync: this);
           _scrollController = ScrollController();
-          _scrollController.addListener(_scrollListener);
+          _scrollController?.addListener(_scrollListener);
         } else {
           _hasError = true;
         }
@@ -78,8 +79,8 @@ class _AuthorPageState extends State<AuthorPage>
   @override
   void dispose() {
     _tabController?.dispose();
-    _scrollController.removeListener(_scrollListener);
-    _scrollController.dispose();
+    _scrollController?.removeListener(_scrollListener);
+    _scrollController?.dispose();
     super.dispose();
   }
 
@@ -129,7 +130,7 @@ class _AuthorPageState extends State<AuthorPage>
                   Padding(
                     padding: EdgeInsets.all(15),
                     child: CacheImage.network(
-                      url: widget.author.icon,
+                      url: widget.authorIcon ?? _pgcInfo.icon,
                       width: 50,
                       height: 50,
                       borderRadius: BorderRadius.circular(20),
@@ -249,10 +250,10 @@ class _AuthorPageState extends State<AuthorPage>
       );
     }
     if (_hasError) {
-      return RetryWidget(onTapRetry: _loadTabs);
+      return Scaffold(body: RetryWidget(onTapRetry: _loadTabs));
     }
     if (_tabList.isEmpty) {
-      return EmptyWidget();
+      return const Scaffold(body: EmptyWidget());
     }
 
     return Scaffold(

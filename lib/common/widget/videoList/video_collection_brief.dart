@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 import 'package:flutter_eyepetizer/common/utils/cache_image.dart';
 import 'package:flutter_eyepetizer/common/utils/date_utils.dart';
-
-typedef VideoItemCallback = void Function(VideoItem videoItem);
+import 'package:flutter_eyepetizer/common/widget/video_navigation.dart';
 
 class VideoCollectionBrief extends StatelessWidget {
-  const VideoCollectionBrief({super.key, required this.item, this.onTap});
+  const VideoCollectionBrief({super.key, required this.item});
 
   final VideoItem item;
-  final VideoItemCallback? onTap;
 
   // 调整内容高度，增加一些缓冲空间
   final _contentHeight = 280.0; // 增加了5像素的缓冲
@@ -69,10 +67,15 @@ class VideoCollectionBrief extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center, // 确保垂直居中
         children: [
           ClipOval(
-            child: CacheImage.network(
-              url: header.icon,
-              width: 40,
-              height: 40,
+            child: GestureDetector(
+              onTap: () {
+                VideoNavigation.toAuthorPage(header.id, header.icon);
+              },
+              child: CacheImage.network(
+                url: header.icon,
+                width: 40,
+                height: 40,
+              ),
             ), // 略微减小头像
           ),
           Expanded(
@@ -109,7 +112,9 @@ class VideoCollectionBrief extends StatelessWidget {
     final textScheme = theme.textTheme;
 
     return GestureDetector(
-      onTap: () => onTap?.call(item),
+      onTap: () {
+        VideoNavigation.toVideoDetail(item.data);
+      },
       child: Container(
         width: _cardWidth,
         margin: const EdgeInsets.symmetric(horizontal: 8),

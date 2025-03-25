@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
-import 'package:flutter_eyepetizer/common/utils/navigator_util.dart';
 import 'package:flutter_eyepetizer/common/utils/share_utils.dart';
 import 'package:flutter_eyepetizer/common/widget/videoPlayer/video_appbar.dart';
 import 'package:flutter_eyepetizer/common/widget/videoPlayer/video_widget.dart';
+import 'package:flutter_eyepetizer/common/widget/video_navigation.dart';
 import 'package:flutter_eyepetizer/module/videoDetail/video_detail_info_page.dart';
 
 class VideoDetailPage extends StatefulWidget {
@@ -73,10 +73,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
                 videoData: videodata,
                 onItemListTap: (videoItem) {
                   videoKey.currentState?.pause();
-                  toPage(
-                    () => VideoDetailPage(videoData: videoItem.data),
-                    preventDuplicates: false,
-                  );
+                  VideoNavigation.toVideoDetail(videoItem.data);
                 },
               ),
             ),

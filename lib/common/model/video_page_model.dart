@@ -100,6 +100,8 @@ class VideoItem {
   final int id;
   final int adIndex;
 
+  var author;
+
   VideoItem({
     required this.type,
     required this.data,

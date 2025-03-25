@@ -117,7 +117,7 @@ class _CategoryPageState extends State<CategoryPage>
   Widget build(BuildContext context) {
     super.build(context);
     if (_isLoading) {
-      return const Scaffold(body: Center(child: AdaptiveProgressIndicator()));
+      return const Center(child: AdaptiveProgressIndicator());
     }
     if (_hasError) {
       return RetryWidget(onTapRetry: _loadCategoryList);

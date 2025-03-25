@@ -2,18 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 import 'package:flutter_eyepetizer/common/utils/cache_image.dart';
 import 'package:flutter_eyepetizer/common/utils/date_utils.dart';
-
-typedef VideoItemCallback = void Function(VideoItem videoItem);
+import 'package:flutter_eyepetizer/common/widget/video_navigation.dart';
 
 class VideoCollectionHorizontalScrollCard extends StatelessWidget {
-  const VideoCollectionHorizontalScrollCard({
-    super.key,
-    required this.item,
-    this.onTap,
-  });
+  const VideoCollectionHorizontalScrollCard({super.key, required this.item});
 
   final VideoItem item;
-  final VideoItemCallback? onTap;
 
   final _contentHeight = 260.0;
 
@@ -56,14 +50,22 @@ class VideoCollectionHorizontalScrollCard extends StatelessWidget {
 
   // 构建头部标题
   Widget _buildHeader(BuildContext context, String title) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Text(
-        title,
-        style: Theme.of(
-          context,
-        ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+    return GestureDetector(
+      onTap: () {
+        VideoNavigation.toAuthorPage(
+          item.data.author.id,
+          item.data.header?.icon,
+        );
+      },
+      child: Container(
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Text(
+          title,
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
@@ -89,7 +91,9 @@ class VideoCollectionHorizontalScrollCard extends StatelessWidget {
     final textScheme = theme.textTheme;
 
     return GestureDetector(
-      onTap: () => onTap?.call(item),
+      onTap: () {
+        VideoNavigation.toVideoDetail(item.data);
+      },
       child: Container(
         width: _cardWidth,
         margin: const EdgeInsets.symmetric(horizontal: 8),

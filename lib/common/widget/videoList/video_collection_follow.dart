@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 import 'package:flutter_eyepetizer/common/utils/cache_image.dart';
 import 'package:flutter_eyepetizer/common/utils/date_utils.dart';
-
-typedef VideoItemCallback = void Function(VideoItem videoItem);
+import 'package:flutter_eyepetizer/common/widget/video_navigation.dart';
 
 class VideoCollectionFollow extends StatelessWidget {
-  const VideoCollectionFollow({super.key, required this.item, this.onTap});
+  const VideoCollectionFollow({super.key, required this.item});
 
   final VideoItem item;
-  final VideoItemCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +46,9 @@ class VideoCollectionFollow extends StatelessWidget {
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
         clipBehavior: Clip.antiAlias,
         child: GestureDetector(
-          onTap: () => onTap?.call(item),
+          onTap: () {
+            VideoNavigation.toVideoDetail(item.data);
+          },
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

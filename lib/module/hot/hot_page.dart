@@ -65,9 +65,7 @@ class _HotPageState extends State<HotPage>
     super.build(context);
 
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: Center(child: AdaptiveProgressIndicator())),
-      );
+      return const Center(child: Center(child: AdaptiveProgressIndicator()));
     }
     if (_hasError) {
       return RetryWidget(onTapRetry: _loadHotTabs);

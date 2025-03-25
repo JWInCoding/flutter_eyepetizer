@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 import 'package:flutter_eyepetizer/common/utils/cache_image.dart';
 import 'package:flutter_eyepetizer/common/utils/date_utils.dart';
+import 'package:flutter_eyepetizer/common/widget/video_navigation.dart';
 
 class VideoWidget extends StatelessWidget {
   // 类常量定义
@@ -10,18 +11,10 @@ class VideoWidget extends StatelessWidget {
   static const double kSmallIconSize = 14.0;
   static const EdgeInsets kInfoPadding = EdgeInsets.fromLTRB(15, 10, 15, 10);
 
-  const VideoWidget({
-    super.key,
-    required this.item,
-    this.showCategory = true,
-    this.onTap,
-    this.onAuthorTap,
-  });
+  const VideoWidget({super.key, required this.item, this.showCategory = true});
 
   final VideoItem item;
   final bool showCategory;
-  final VoidCallback? onTap;
-  final VoidCallback? onAuthorTap;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +32,9 @@ class VideoWidget extends StatelessWidget {
         Theme.of(context).brightness == Brightness.light ? 1.0 : 0.8;
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        VideoNavigation.toVideoDetail(item.data);
+      },
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -100,7 +95,9 @@ class VideoWidget extends StatelessWidget {
             : item.data.author.icon;
 
     return GestureDetector(
-      onTap: onAuthorTap,
+      onTap: () {
+        VideoNavigation.toAuthorPage(item.data.author.id, avatarUrl);
+      },
       child: ClipOval(
         clipBehavior: Clip.antiAlias,
         child: CacheImage.network(

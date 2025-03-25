@@ -3,14 +3,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 import 'package:flutter_eyepetizer/common/utils/cache_image.dart';
-
-typedef VideoItemCallback = void Function(VideoItem videoItem);
+import 'package:flutter_eyepetizer/common/widget/video_navigation.dart';
 
 class VideoCollectionCover extends StatelessWidget {
-  const VideoCollectionCover({super.key, required this.item, this.onTap});
+  const VideoCollectionCover({super.key, required this.item});
 
   final VideoItem item;
-  final VideoItemCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +45,9 @@ class VideoCollectionCover extends StatelessWidget {
     final theme = Theme.of(context);
     final textScheme = theme.textTheme;
     return GestureDetector(
-      onTap: () => onTap?.call(item),
+      onTap: () {
+        VideoNavigation.toVideoDetail(item.data);
+      },
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 2),
         child: Stack(
