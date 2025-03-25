@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
-import 'package:flutter_eyepetizer/common/utils/navigator_util.dart';
 import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
 import 'package:flutter_eyepetizer/common/widget/localized_smart_refresher.dart';
-import 'package:flutter_eyepetizer/module/discovery/follow/viewModel/follow_view_model.dart';
-import 'package:flutter_eyepetizer/module/discovery/follow/widget/follow_collection.dart';
-import 'package:flutter_eyepetizer/module/videoDetail/video_detail_page.dart';
+import 'package:flutter_eyepetizer/common/widget/videoList/video_list_builder.dart';
+import 'package:flutter_eyepetizer/module/discovery/follow/follow_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
@@ -82,13 +80,9 @@ class _FollowPageState extends State<FollowPage>
             child: ListView.builder(
               itemCount: viewModel.items.length,
               itemBuilder: (context, index) {
-                final item = viewModel.items[index];
-
-                return FollowCollection(
-                  item: item,
-                  onTap: (tapItem) {
-                    toPage(() => VideoDetailPage(videoData: tapItem.data));
-                  },
+                return VideoListBuilder.buildItem(
+                  context,
+                  viewModel.items[index],
                 );
               },
             ),

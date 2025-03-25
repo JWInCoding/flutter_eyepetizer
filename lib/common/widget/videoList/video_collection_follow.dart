@@ -5,8 +5,8 @@ import 'package:flutter_eyepetizer/common/utils/date_utils.dart';
 
 typedef VideoItemCallback = void Function(VideoItem videoItem);
 
-class DailyItemCollectionFollow extends StatelessWidget {
-  const DailyItemCollectionFollow({super.key, required this.item, this.onTap});
+class VideoCollectionFollow extends StatelessWidget {
+  const VideoCollectionFollow({super.key, required this.item, this.onTap});
 
   final VideoItem item;
   final VideoItemCallback? onTap;

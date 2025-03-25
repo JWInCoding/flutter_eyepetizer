@@ -7,8 +7,12 @@ import 'package:flutter_eyepetizer/common/utils/date_utils.dart';
 
 typedef VideoItemCallback = void Function(VideoItem videoItem);
 
-class FollowCollection extends StatelessWidget {
-  const FollowCollection({super.key, required this.item, this.onTap});
+class VideoCollectionHorizontalScrollCard extends StatelessWidget {
+  const VideoCollectionHorizontalScrollCard({
+    super.key,
+    required this.item,
+    this.onTap,
+  });
 
   final VideoItem item;
   final VideoItemCallback? onTap;
@@ -21,8 +25,6 @@ class FollowCollection extends StatelessWidget {
 
     return Column(
       children: [
-        _buildHeader(context, item),
-        // 替换这部分
         SizedBox(
           height: 220,
           child: Padding(
@@ -39,50 +41,6 @@ class FollowCollection extends StatelessWidget {
         ),
         const Divider(),
       ],
-    );
-  }
-
-  Widget _buildHeader(BuildContext context, VideoItem item) {
-    final theme = Theme.of(context);
-    final textScheme = theme.textTheme;
-
-    final header = item.data.header;
-    if (header == null) {
-      return SizedBox.shrink();
-    }
-
-    return Container(
-      padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-      child: Row(
-        children: [
-          ClipOval(
-            clipBehavior: Clip.antiAlias,
-            child: CacheImage.network(url: header.icon, width: 44, height: 44),
-          ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.only(left: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    header.title,
-                    style: textScheme.titleMedium,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                  ),
-                  Text(
-                    item.data.header?.description ?? "",
-                    style: textScheme.titleMedium,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 
-class DailyTitleHeaderLayout extends StatelessWidget {
-  const DailyTitleHeaderLayout(this.item, {super.key});
+class TextHeader extends StatelessWidget {
+  const TextHeader(this.item, {super.key});
 
   final VideoItem item;
 

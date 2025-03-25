@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/appbar_widget.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
-import 'package:flutter_eyepetizer/common/utils/navigator_util.dart';
 import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
 import 'package:flutter_eyepetizer/common/widget/localized_smart_refresher.dart';
-import 'package:flutter_eyepetizer/common/widget/video_item_layout.dart';
+import 'package:flutter_eyepetizer/common/widget/videoList/video_list_builder.dart';
 import 'package:flutter_eyepetizer/module/discovery/category/category_detail_view_model.dart';
 import 'package:flutter_eyepetizer/module/discovery/category/category_model.dart';
-import 'package:flutter_eyepetizer/module/videoDetail/video_detail_page.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
@@ -100,13 +98,9 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
             child: ListView.builder(
               itemCount: viewModel.items.length,
               itemBuilder: (context, index) {
-                final item = viewModel.items[index];
-
-                return VideoItemLayout(
-                  item: item,
-                  onTap: () {
-                    toPage(() => VideoDetailPage(videoData: item.data));
-                  },
+                return VideoListBuilder.buildItem(
+                  context,
+                  viewModel.items[index],
                 );
               },
             ),

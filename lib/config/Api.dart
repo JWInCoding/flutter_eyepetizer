@@ -21,4 +21,7 @@ class API {
 
   /// 关注
   static const String follow = 'v4/tabs/follow';
+
+  /// 作者详情页 tab 列表
+  static String authorTabList = 'v4/pgcs/detail/tab';
 }

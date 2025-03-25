@@ -6,8 +6,8 @@ import 'package:flutter_eyepetizer/common/utils/cache_image.dart';
 
 typedef VideoItemCallback = void Function(VideoItem videoItem);
 
-class DailyItemCollectionCover extends StatelessWidget {
-  const DailyItemCollectionCover({super.key, required this.item, this.onTap});
+class VideoCollectionCover extends StatelessWidget {
+  const VideoCollectionCover({super.key, required this.item, this.onTap});
 
   final VideoItem item;
   final VideoItemCallback? onTap;

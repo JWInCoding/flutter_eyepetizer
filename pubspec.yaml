@@ -118,9 +118,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-# 暂时没有图片资源需要导入
-  # assets:
-    # - assets/images
+  assets:
+    - assets/images/
     # - assets/icon
     # - assets/launch
 
