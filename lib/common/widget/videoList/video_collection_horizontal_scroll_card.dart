@@ -38,7 +38,7 @@ class VideoCollectionHorizontalScrollCard extends StatelessWidget {
 
         // 标题部分
         if (header != null && header.title.isNotEmpty)
-          _buildHeader(context, header.title),
+          _buildHeader(context, header),
 
         // 滚动内容部分
         _buildScrollableContent(context, nestedItems),
@@ -49,16 +49,40 @@ class VideoCollectionHorizontalScrollCard extends StatelessWidget {
   }
 
   // 构建头部标题
-  Widget _buildHeader(BuildContext context, String title) {
+  Widget _buildHeader(BuildContext context, Header header) {
+    final hasActionUrl = header.actionUrl.isNotEmpty;
+    final textTheme = Theme.of(context).textTheme;
+
     return Container(
-      alignment: Alignment.center,
-      width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Text(
-        title,
-        style: Theme.of(
-          context,
-        ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // 标题居中
+          Center(
+            child: Text(
+              header.title,
+              style: textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+
+          // 右侧箭头，使用Positioned确保不会影响标题居中
+          if (hasActionUrl)
+            Positioned(
+              right: 0,
+              child: GestureDetector(
+                onTap: () {
+                  VideoNavigation.toPlayListPageFromActionUrl(header.actionUrl);
+                },
+                child: Icon(
+                  Icons.chevron_right,
+                  color: textTheme.titleLarge?.color,
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

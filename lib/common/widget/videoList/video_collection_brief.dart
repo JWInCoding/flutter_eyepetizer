@@ -69,7 +69,10 @@ class VideoCollectionBrief extends StatelessWidget {
           ClipOval(
             child: GestureDetector(
               onTap: () {
-                VideoNavigation.toAuthorPage(header.id, header.icon);
+                final actionUrl = header.actionUrl;
+                if (actionUrl.isNotEmpty) {
+                  VideoNavigation.toPlayListPageFromActionUrl(actionUrl);
+                }
               },
               child: CacheImage.network(
                 url: header.icon,
