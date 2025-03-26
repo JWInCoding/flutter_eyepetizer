@@ -27,6 +27,8 @@ class VideoDetailInfoPage extends StatefulWidget {
 
 class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
     with BasePage<VideoDetailInfoPage> {
+  bool _showInfoAnimation = true;
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -55,7 +57,7 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
           ),
           child: CustomScrollView(
             slivers: [
-              _buildVideoInfo(),
+              _buildVideoInfo(_showInfoAnimation),
               Consumer<VideoDetailViewModel>(
                 builder: (context, viewModel, _) {
                   return _buildRelateVideoContent(viewModel);
@@ -69,11 +71,18 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
   }
 
   /// 当前视频信息
-  SliverToBoxAdapter _buildVideoInfo() {
+  SliverToBoxAdapter _buildVideoInfo(bool showAnimation) {
+    final title = widget.videoData.title;
     final titlePgc =
         widget.videoData.titlePgc.isEmpty
             ? widget.videoData.category
             : widget.videoData.titlePgc;
+
+    final date = formatDateMsByYMDHM(widget.videoData.author.latestReleaseTime);
+
+    final description = widget.videoData.description;
+    // 修改属性，后续重新绘制时不需要动画
+    _showInfoAnimation = false;
 
     return SliverToBoxAdapter(
       child: Column(
@@ -82,98 +91,107 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
           // title - 使用打字机效果
           // 因为使用了文字效果库 AnimatedTextKit，右侧会默认留有光标的位置，所有 padding 的 right 使用 5，才能达到视觉效果的左右间距统一
           Padding(
-            padding: EdgeInsets.fromLTRB(10, 10, 5, 0),
+            padding: const EdgeInsets.fromLTRB(10, 10, 5, 0),
             child: DefaultTextStyle(
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
-              child: AnimatedTextKit(
-                animatedTexts: [
-                  TypewriterAnimatedText(
-                    widget.videoData.title,
-                    speed: Duration(milliseconds: 50),
-                    cursor: '', // 移除光标
-                  ),
-                ],
-                isRepeatingAnimation: false,
-                totalRepeatCount: 1,
-              ),
+              child:
+                  showAnimation
+                      ? AnimatedTextKit(
+                        animatedTexts: [
+                          TypewriterAnimatedText(
+                            title,
+                            speed: Duration(milliseconds: 50),
+                            cursor: '', // 移除光标
+                          ),
+                        ],
+                        isRepeatingAnimation: false,
+                        totalRepeatCount: 1,
+                      )
+                      : Text(title),
             ),
           ),
 
           // 类型
           Padding(
-            padding: EdgeInsets.fromLTRB(10, 10, 5, 0),
+            padding: const EdgeInsets.fromLTRB(10, 10, 5, 0),
             child: DefaultTextStyle(
               style: TextStyle(color: Colors.white60, fontSize: 12),
-              child: AnimatedTextKit(
-                animatedTexts: [
-                  TypewriterAnimatedText(
-                    '#$titlePgc',
-                    speed: Duration(milliseconds: 30),
-                    cursor: '', // 移除光标
-                  ),
-                ],
-                isRepeatingAnimation: false,
-                totalRepeatCount: 1,
-              ),
+              child:
+                  showAnimation
+                      ? AnimatedTextKit(
+                        animatedTexts: [
+                          TypewriterAnimatedText(
+                            '#$titlePgc',
+                            speed: Duration(milliseconds: 30),
+                            cursor: '', // 移除光标
+                          ),
+                        ],
+                        isRepeatingAnimation: false,
+                        totalRepeatCount: 1,
+                      )
+                      : Text(titlePgc),
             ),
           ),
 
           // 日期
           Padding(
-            padding: EdgeInsets.fromLTRB(10, 5, 5, 0),
+            padding: const EdgeInsets.fromLTRB(10, 5, 5, 0),
             child: DefaultTextStyle(
               style: TextStyle(color: Colors.white60, fontSize: 12),
-              child: AnimatedTextKit(
-                animatedTexts: [
-                  TypewriterAnimatedText(
-                    formatDateMsByYMDHM(
-                      widget.videoData.author.latestReleaseTime,
-                    ),
-                    speed: Duration(milliseconds: 30),
-                    cursor: '', // 移除光标
-                  ),
-                ],
-                isRepeatingAnimation: false,
-                totalRepeatCount: 1,
-              ),
+              child:
+                  showAnimation
+                      ? AnimatedTextKit(
+                        animatedTexts: [
+                          TypewriterAnimatedText(
+                            date,
+                            speed: Duration(milliseconds: 30),
+                            cursor: '', // 移除光标
+                          ),
+                        ],
+                        isRepeatingAnimation: false,
+                        totalRepeatCount: 1,
+                      )
+                      : Text(date),
             ),
           ),
 
           // 简介
           Padding(
-            padding: EdgeInsets.fromLTRB(10, 10, 5, 0),
+            padding: const EdgeInsets.fromLTRB(10, 10, 5, 0),
             child: DefaultTextStyle(
-              style: TextStyle(color: Colors.white, fontSize: 14),
-              child: AnimatedTextKit(
-                animatedTexts: [
-                  TypewriterAnimatedText(
-                    widget.videoData.description,
-                    speed: Duration(
-                      milliseconds:
-                          widget.videoData.description.length < 100 ? 10 : 5,
-                    ),
-                    cursor: '',
-                  ),
-                ],
-                isRepeatingAnimation: false,
-                totalRepeatCount: 1,
-              ),
+              style: const TextStyle(color: Colors.white, fontSize: 14),
+              child:
+                  showAnimation
+                      ? AnimatedTextKit(
+                        animatedTexts: [
+                          TypewriterAnimatedText(
+                            widget.videoData.description,
+                            speed: Duration(
+                              milliseconds: description.length < 100 ? 10 : 5,
+                            ),
+                            cursor: '',
+                          ),
+                        ],
+                        isRepeatingAnimation: false,
+                        totalRepeatCount: 1,
+                      )
+                      : Text(description),
             ),
           ),
           //分割线
           Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: Divider(height: 0.5, color: Colors.white),
+            padding: const EdgeInsets.only(top: 10),
+            child: const Divider(height: 0.5, color: Colors.white),
           ),
           // 作者、来源
           Row(
             children: [
               Padding(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: ClipOval(
                   child: CacheImage.network(
                     url:
@@ -188,7 +206,7 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
               Expanded(
                 flex: 1,
                 child: Padding(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -196,11 +214,17 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
                         widget.videoData.author.name.isEmpty
                             ? widget.videoData.provider.name
                             : widget.videoData.author.name,
-                        style: TextStyle(color: Colors.white, fontSize: 14),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
                       ),
                       Text(
                         widget.videoData.author.description,
-                        style: TextStyle(color: Colors.white, fontSize: 12),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ),
@@ -208,7 +232,7 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
               ),
             ],
           ),
-          Divider(height: 0.5, color: Colors.white),
+          const Divider(height: 0.5, color: Colors.white),
         ],
       ),
     );
@@ -253,16 +277,16 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
     } else if (item.data.text != null && item.data.text!.isNotEmpty) {
       return _buildTextItem(item);
     }
-    return SizedBox.shrink();
+    return const SizedBox.shrink();
   }
 
   /// 相关视频列表标题
   Widget _buildTextItem(VideoItem item) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
+      padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
       child: Text(
         item.data.text!,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -274,7 +298,7 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
   /// 相关视频列表 item
   Widget _buildCollectItem(BuildContext context, VideoItem item) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(10, 5, 10, 10),
+      padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
       child: GestureDetector(
         onTap: () => widget.onItemListTap?.call(item),
         child: Container(
@@ -304,7 +328,7 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
     final textColor = Colors.white.withValues(alpha: 0.9);
 
     return Container(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

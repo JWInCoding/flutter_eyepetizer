@@ -105,7 +105,7 @@ class VideoWidgetState extends State<VideoWidget> {
       if (size.width > size.height) {
         // 强制回到竖屏
         SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-        // 还可以调整UI显示模式
+        // 调整UI显示模式
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       }
     }
@@ -151,11 +151,13 @@ class VideoWidgetState extends State<VideoWidget> {
       );
     }
 
-    return Container(
-      color: Colors.black,
-      width: width,
-      height: height,
-      child: Chewie(controller: _chewieController!),
+    return RepaintBoundary(
+      child: Container(
+        color: Colors.black,
+        width: width,
+        height: height,
+        child: Chewie(controller: _chewieController!),
+      ),
     );
   }
 }
