@@ -74,7 +74,7 @@ class VideoCollectionHorizontalScrollCard extends StatelessWidget {
               right: 0,
               child: GestureDetector(
                 onTap: () {
-                  VideoNavigation.toPlayListPageFromActionUrl(header.actionUrl);
+                  VideoNavigation.actionUrl(header.actionUrl, header.icon);
                 },
                 child: Icon(
                   Icons.chevron_right,

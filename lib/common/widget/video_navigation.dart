@@ -4,6 +4,11 @@ import 'package:flutter_eyepetizer/module/author/author_page.dart';
 import 'package:flutter_eyepetizer/module/playlist/play_list_page.dart';
 import 'package:flutter_eyepetizer/module/videoDetail/video_detail_page.dart';
 
+enum NavigationPageType {
+  author, // 作者页面
+  playlist, // 播放列表页面
+}
+
 class VideoNavigation {
   /// 跳转到视频详情页
   static void toVideoDetail(VideoData videoData) {
@@ -26,29 +31,84 @@ class VideoNavigation {
     toPage(() => PlayListPage(playListName: playListName, apiUrl: apiUrl));
   }
 
-  /// 从actionUrl解析参数并跳转到播放列表页面
-  ///
-  /// [actionUrlString] 格式如："eyepetizer://common/?title=xxx&url=xxx"
-  /// 返回布尔值表示是否成功解析并跳转
-  static bool toPlayListPageFromActionUrl(String actionUrlString) {
-    if (actionUrlString.isEmpty) {
-      return false;
+  /// actionUrl 方式进行页面跳转
+  static void actionUrl(String url, String iconUrl) {
+    if (url.isEmpty) return;
+
+    final result = parseActionUrl(url);
+
+    // 如果解析结果为null，直接返回，不执行任何操作
+    if (result == null) return;
+
+    switch (result.pageType) {
+      case NavigationPageType.author:
+        VideoNavigation.toAuthorPage(int.parse(result.authorId!), iconUrl);
+        break;
+      case NavigationPageType.playlist:
+        VideoNavigation.toPlayListPage(result.title, result.playlistUrl!);
+        break;
     }
+  }
+}
 
-    try {
-      final uri = Uri.parse(actionUrlString);
+/// URL解析结果
+class ActionUrlResult {
+  final NavigationPageType pageType;
+  final String? authorId; // 作者ID
+  final String? playlistUrl; // 播放列表URL
+  final String title; // 页面标题
 
-      final title = uri.queryParameters['title'];
-      final url = uri.queryParameters['url'];
+  ActionUrlResult({
+    required this.pageType,
+    this.authorId,
+    this.playlistUrl,
+    required this.title,
+  });
+}
 
-      if (title != null && url != null) {
-        toPlayListPage(title, url);
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      return false;
-    }
+ActionUrlResult? parseActionUrl(String urlString) {
+  if (urlString.isEmpty) return null;
+
+  Uri? uri;
+  try {
+    uri = Uri.parse(urlString);
+  } catch (_) {
+    return null;
+  }
+
+  // 非eyepetizer协议直接返回null
+  if (uri.scheme != 'eyepetizer') return null;
+
+  // 根据host直接判断页面类型
+  switch (uri.host) {
+    case 'pgc':
+      // 先检查路径格式是否符合预期
+      if (!uri.path.contains('/detail/')) return null;
+
+      // 提取作者ID并验证
+      final authorId = RegExp(r'/detail/(\d+)').firstMatch(uri.path)?.group(1);
+      if (authorId == null || authorId.isEmpty) return null;
+
+      return ActionUrlResult(
+        pageType: NavigationPageType.author,
+        authorId: authorId,
+        title: '',
+      );
+
+    case 'common':
+      // 提取播放列表URL并验证
+      final playlistUrl = uri.queryParameters['url'];
+      if (playlistUrl == null || playlistUrl.isEmpty) return null;
+
+      final title = uri.queryParameters['title'] ?? '';
+
+      return ActionUrlResult(
+        pageType: NavigationPageType.playlist,
+        playlistUrl: playlistUrl,
+        title: title,
+      );
+
+    default:
+      return null;
   }
 }
