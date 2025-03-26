@@ -15,6 +15,7 @@ class TextHeader extends StatelessWidget {
         Container(
           alignment: Alignment.center,
           height: 44,
+          width: double.infinity,
           child: Text(
             item.data.text ?? "",
             textAlign: TextAlign.center,

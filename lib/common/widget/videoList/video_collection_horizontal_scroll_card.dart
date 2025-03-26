@@ -50,22 +50,15 @@ class VideoCollectionHorizontalScrollCard extends StatelessWidget {
 
   // 构建头部标题
   Widget _buildHeader(BuildContext context, String title) {
-    return GestureDetector(
-      onTap: () {
-        VideoNavigation.toAuthorPage(
-          item.data.author.id,
-          item.data.header?.icon,
-        );
-      },
-      child: Container(
-        alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Text(
-          title,
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-        ),
+    return Container(
+      alignment: Alignment.center,
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Text(
+        title,
+        style: Theme.of(
+          context,
+        ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
       ),
     );
   }
