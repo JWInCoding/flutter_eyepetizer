@@ -196,7 +196,7 @@ jobs:
           generate_release_notes: true
           draft: false
           body: |
-            # 开眼 App 自动构建版本 ${{ github.ref_name }}
+            # 构建版本 ${{ github.ref_name }}
 
             ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && '## 📱 蒲公英下载' || '## ⚠️ 蒲公英上传状态' }}
             ${{ steps.pgyer-upload.outputs.PGYER_SUCCESS == 'true' && '### 安装方式一：扫描下方二维码' || '' }}
