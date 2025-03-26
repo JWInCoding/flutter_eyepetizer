@@ -1,4 +1,3 @@
-import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
 import 'package:flutter_eyepetizer/common/model/tabinfo_model.dart';
@@ -197,7 +196,6 @@ class _AuthorPageState extends State<AuthorPage>
           isScrollable: false,
           tabs:
               _tabList.map((e) {
-                LogUtil.e(e.apiUrl);
                 return Tab(text: e.name);
               }).toList(),
         ),
