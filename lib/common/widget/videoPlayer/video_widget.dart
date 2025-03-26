@@ -34,7 +34,6 @@ class VideoWidget extends StatefulWidget {
 class VideoWidgetState extends State<VideoWidget> {
   VideoPlayerController? _videoPlayerController;
   ChewieController? _chewieController;
-  bool _isFullScreen = false;
 
   @override
   void initState() {
@@ -93,13 +92,9 @@ class VideoWidgetState extends State<VideoWidget> {
   void _fullScreenListener() {
     if (_chewieController == null) return;
 
-    final bool isFullScreen = _chewieController!.isFullScreen;
-
-    if (isFullScreen != _isFullScreen) {
-      setState(() {
-        _isFullScreen = isFullScreen;
-      });
-
+    // 只在全屏状态改变时执行操作
+    if (_chewieController!.isFullScreen) {
+      // 只在进入全屏时执行
       // 检测屏幕方向，如果是横屏，强制回到竖屏
       final size = MediaQuery.of(context).size;
       if (size.width > size.height) {
