@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/appbar_widget.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
-import 'package:flutter_eyepetizer/common/utils/toast_utils.dart';
 import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
 import 'package:flutter_eyepetizer/common/widget/localized_smart_refresher.dart';
 import 'package:flutter_eyepetizer/common/widget/video_list_builder.dart';
@@ -74,14 +73,6 @@ class _DailyPageState extends State<DailyPage>
           fontStyle: FontStyle.italic,
         ),
         showBack: false,
-        actions: [
-          IconButton(
-            onPressed: () {
-              showTip('开发中');
-            },
-            icon: Icon(Icons.search),
-          ),
-        ],
       ),
       body: Consumer<DailyViewModel>(
         builder: (context, viewModel, child) {
