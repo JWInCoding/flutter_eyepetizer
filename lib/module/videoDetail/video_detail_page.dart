@@ -22,6 +22,8 @@ class _VideoDetailPageState extends State<VideoDetailPage>
 
   late VideoData videodata;
 
+  bool _isFullScreen = false;
+
   @override
   void initState() {
     super.initState();
@@ -49,32 +51,74 @@ class _VideoDetailPageState extends State<VideoDetailPage>
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final screenHeight = mediaQuery.size.height;
+    final screenWidth = mediaQuery.size.width;
+    final statusBarHeight = mediaQuery.padding.top;
+
+    // 计算视频高度（非全屏状态）
+    final videoHeight = screenWidth / 16 * 9; // 假设比例为16:9
+
     return AnnotatedRegion(
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
-        body: Column(
+        body: Stack(
           children: [
-            _statusBar(),
-            VideoWidget(
-              key: videoKey,
-              videoUrl: widget.videoData.playUrl,
-              overlayUI: VideoAppbar(
-                onShareTap: () {
-                  share(
-                    widget.videoData.title,
-                    widget.videoData.webUrl.forWeibo,
-                  );
+            // 黑色背景，确保全屏时没有白色闪烁
+            Container(color: Colors.black),
+
+            // 状态栏区域（只在非全屏时可见）
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: statusBarHeight,
+              child: _isFullScreen ? const SizedBox.shrink() : _statusBar(),
+            ),
+
+            // 视频播放器
+            Positioned(
+              top: _isFullScreen ? 0 : statusBarHeight,
+              left: 0,
+              right: 0,
+              height: _isFullScreen ? screenHeight : videoHeight,
+              child: VideoWidget(
+                key: videoKey,
+                videoUrl: widget.videoData.playUrl,
+                overlayUI: VideoAppbar(
+                  onShareTap: () {
+                    share(
+                      widget.videoData.title,
+                      widget.videoData.webUrl.forWeibo,
+                    );
+                  },
+                ),
+                onFullScreenChanged: (isFullScreen) {
+                  setState(() {
+                    _isFullScreen = isFullScreen;
+                  });
                 },
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: VideoDetailInfoPage(
-                videoData: videodata,
-                onItemListTap: (videoItem) {
-                  videoKey.currentState?.pause();
-                  VideoNavigation.toVideoDetail(videoItem.data);
-                },
+
+            // 详情信息页
+            Positioned(
+              top:
+                  _isFullScreen
+                      ? screenHeight
+                      : statusBarHeight + videoHeight, // 全屏时移出屏幕
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                color: Colors.black,
+                child: VideoDetailInfoPage(
+                  videoData: videodata,
+                  onItemListTap: (videoItem) {
+                    videoKey.currentState?.pause();
+                    VideoNavigation.toVideoDetail(videoItem.data);
+                  },
+                ),
               ),
             ),
           ],

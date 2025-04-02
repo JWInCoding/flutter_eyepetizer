@@ -17,6 +17,7 @@ class VideoWidget extends StatefulWidget {
     this.allowPlaybackSpeedChanging = false,
     this.aspectRatio = 16 / 9,
     required this.overlayUI,
+    this.onFullScreenChanged,
   });
 
   final String videoUrl;
@@ -26,6 +27,7 @@ class VideoWidget extends StatefulWidget {
   final bool allowPlaybackSpeedChanging;
   final double aspectRatio;
   final Widget overlayUI;
+  final ValueChanged<bool>? onFullScreenChanged;
 
   @override
   VideoWidgetState createState() => VideoWidgetState();
@@ -94,15 +96,19 @@ class VideoWidgetState extends State<VideoWidget> {
 
     // 只在全屏状态改变时执行操作
     if (_chewieController!.isFullScreen) {
-      // 只在进入全屏时执行
-      // 检测屏幕方向，如果是横屏，强制回到竖屏
-      final size = MediaQuery.of(context).size;
-      if (size.width > size.height) {
-        // 强制回到竖屏
-        SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-        // 调整UI显示模式
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-      }
+      // 进入全屏时自动旋转到横屏
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+    } else {
+      // 退出全屏时恢复竖屏
+      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    }
+
+    // 通知父组件全屏状态变化
+    if (widget.onFullScreenChanged != null) {
+      widget.onFullScreenChanged!(_chewieController!.isFullScreen);
     }
   }
 
