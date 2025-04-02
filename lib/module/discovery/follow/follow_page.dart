@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
+import 'package:flutter_eyepetizer/common/view_model.dart/page_list_view_model.dart';
 import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
 import 'package:flutter_eyepetizer/common/widget/localized_smart_refresher.dart';
 import 'package:flutter_eyepetizer/common/widget/video_list_builder.dart';
-import 'package:flutter_eyepetizer/module/discovery/follow/follow_view_model.dart';
+import 'package:flutter_eyepetizer/config/Api.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class FollowPage extends StatefulWidget {
   const FollowPage({super.key});
@@ -16,73 +16,48 @@ class FollowPage extends StatefulWidget {
 
 class _FollowPageState extends State<FollowPage>
     with BasePage<FollowPage>, AutomaticKeepAliveClientMixin {
-  final RefreshController _refreshController = RefreshController(
-    initialRefresh: false,
-  );
-
-  late final FollowViewModel _viewModel;
+  late final PageListViewModel _viewModel;
 
   @override
   void initState() {
     super.initState();
-    _viewModel = FollowViewModel();
+    _viewModel = PageListViewModel(API.follow, [
+      'videoCollectionWithBrief',
+      'videoCollectionOfHorizontalScrollCard',
+    ]);
   }
 
   @override
   void dispose() {
-    _refreshController.dispose();
     _viewModel.dispose();
     super.dispose();
   }
 
-  void _onRefresh() async {
-    try {
-      await _viewModel.refreshFollowData();
-      _refreshController.refreshCompleted();
-      _viewModel.hasMore
-          ? _refreshController.loadComplete()
-          : _refreshController.loadNoData();
-    } catch (e) {
-      _refreshController.refreshFailed();
-    }
-  }
-
-  void _onLoadMore() async {
-    try {
-      await _viewModel.loadMoreData();
-      _viewModel.hasMore
-          ? _refreshController.loadComplete()
-          : _refreshController.loadNoData();
-    } catch (e) {
-      _refreshController.loadFailed();
-    }
-  }
-
   Widget _buildContent() {
     return Scaffold(
-      body: Consumer<FollowViewModel>(
+      body: Consumer<PageListViewModel>(
         builder: (context, viewModel, child) {
-          if (viewModel.items.isEmpty) {
+          if (viewModel.itemList.isEmpty) {
             if (viewModel.isLoading) {
               return const Center(child: AdaptiveProgressIndicator());
             }
             if (viewModel.hasError) {
-              return RetryWidget(onTapRetry: _onRefresh);
+              return RetryWidget(onTapRetry: viewModel.refreshListData);
             }
             return const EmptyWidget();
           }
           return LocalizedSmartRefresher(
-            controller: _refreshController,
+            controller: viewModel.refreshController,
             enablePullDown: true,
             enablePullUp: true,
-            onRefresh: _onRefresh,
-            onLoading: _onLoadMore,
+            onRefresh: viewModel.refreshListData,
+            onLoading: viewModel.loadMoreData,
             child: ListView.builder(
-              itemCount: viewModel.items.length,
+              itemCount: viewModel.itemList.length,
               itemBuilder: (context, index) {
                 return VideoListBuilder.buildItem(
                   context,
-                  viewModel.items[index],
+                  viewModel.itemList[index],
                 );
               },
             ),

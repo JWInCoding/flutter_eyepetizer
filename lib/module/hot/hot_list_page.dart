@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/base/base_page.dart';
+import 'package:flutter_eyepetizer/common/view_model.dart/page_list_view_model.dart';
 import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
 import 'package:flutter_eyepetizer/common/widget/localized_smart_refresher.dart';
 import 'package:flutter_eyepetizer/common/widget/video_list_builder.dart';
-import 'package:flutter_eyepetizer/module/hot/hot_list_view_model.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class HotListPage extends StatefulWidget {
   const HotListPage({super.key, required this.apiUrl});
@@ -18,32 +17,18 @@ class HotListPage extends StatefulWidget {
 
 class _HotListPageState extends State<HotListPage>
     with BasePage<HotListPage>, AutomaticKeepAliveClientMixin {
-  final RefreshController _refreshController = RefreshController(
-    initialRefresh: false,
-  );
-
-  late final HotListViewModel _viewModel;
+  late final PageListViewModel _viewModel;
 
   @override
   void initState() {
     super.initState();
-    _viewModel = HotListViewModel(widget.apiUrl);
+    _viewModel = PageListViewModel(widget.apiUrl, ['video']);
   }
 
   @override
   void dispose() {
-    _refreshController.dispose();
     _viewModel.dispose();
     super.dispose();
-  }
-
-  void _onRefresh() async {
-    await _viewModel.loadHotData();
-    if (_viewModel.hasError) {
-      _refreshController.refreshFailed();
-    } else {
-      _refreshController.refreshCompleted();
-    }
   }
 
   @override
@@ -51,28 +36,28 @@ class _HotListPageState extends State<HotListPage>
     super.build(context);
     return ChangeNotifierProvider.value(
       value: _viewModel,
-      child: Consumer<HotListViewModel>(
+      child: Consumer<PageListViewModel>(
         builder: (context, viewModel, child) {
-          if (viewModel.items.isEmpty) {
+          if (viewModel.itemList.isEmpty) {
             if (viewModel.isLoading) {
               return const Center(child: AdaptiveProgressIndicator());
             }
             if (viewModel.hasError) {
-              return RetryWidget(onTapRetry: _onRefresh);
+              return RetryWidget(onTapRetry: viewModel.refreshListData);
             }
             return const EmptyWidget();
           }
 
           return LocalizedSmartRefresher(
-            controller: _refreshController,
+            controller: viewModel.refreshController,
             enablePullDown: true,
-            onRefresh: _onRefresh,
+            onRefresh: viewModel.refreshListData,
             child: ListView.builder(
-              itemCount: viewModel.items.length,
+              itemCount: viewModel.itemList.length,
               itemBuilder: (context, index) {
                 return VideoListBuilder.buildItem(
                   context,
-                  viewModel.items[index],
+                  viewModel.itemList[index],
                 );
               },
             ),

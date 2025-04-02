@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 import 'package:flutter_eyepetizer/common/utils/request_util.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
-class AuthorListViewModel extends ChangeNotifier {
+class PageListViewModel extends ChangeNotifier {
   final String apiUrl;
+  final Map<String, dynamic>? queryParams;
+  final List<String> fliters;
 
-  List<VideoItem> _items = [];
+  List<VideoItem> _itemList = [];
   bool _isLoading = false;
   bool _hasError = false;
   String? _nextPageUrl;
 
-  List<VideoItem> get items => _items;
+  List<VideoItem> get itemList => _itemList;
   bool get isLoading => _isLoading;
   bool get hasError => _hasError;
   bool get hasMore => _nextPageUrl == null ? false : true;
 
-  AuthorListViewModel(this.apiUrl) {
+  PageListViewModel(this.apiUrl, this.fliters, {this.queryParams}) {
     // 构造函数中可以立即执行初始加载
     refreshListData();
   }
+
+  final RefreshController refreshController = RefreshController(
+    initialRefresh: false,
+  );
 
   Future<void> refreshListData() async {
     _isLoading = true;
@@ -29,17 +36,23 @@ class AuthorListViewModel extends ChangeNotifier {
     try {
       final response = await HttpGo.instance.get(
         apiUrl,
+        queryParams: queryParams,
         fromJson: (json) => VideoPageResponseModel.fromJson(json),
       );
       if (response != null) {
-        _items = _filterItems(response.itemList);
+        _itemList = _filterItems(response.itemList);
         _nextPageUrl = response.nextPageUrl;
       }
+      refreshController.refreshCompleted();
     } catch (e) {
       _hasError = true;
+      refreshController.refreshFailed();
     } finally {
       _isLoading = false;
       notifyListeners();
+      hasMore
+          ? refreshController.loadComplete()
+          : refreshController.loadNoData();
     }
   }
 
@@ -54,14 +67,19 @@ class AuthorListViewModel extends ChangeNotifier {
     try {
       final response = await HttpGo.instance.get(
         _nextPageUrl!,
+        queryParams: queryParams,
         fromJson: (json) => VideoPageResponseModel.fromJson(json),
       );
       if (response != null) {
-        _items.addAll(_filterItems(response.itemList));
+        _itemList.addAll(_filterItems(response.itemList));
         _nextPageUrl = response.nextPageUrl;
       }
+      hasMore
+          ? refreshController.loadComplete()
+          : refreshController.loadNoData();
     } catch (e) {
       _hasError = true;
+      refreshController.loadFailed();
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -73,11 +91,7 @@ class AuthorListViewModel extends ChangeNotifier {
     items.addAll(itemList);
 
     items.removeWhere((item) {
-      final saveType =
-          item.type == 'video' ||
-          item.type == 'videoCollectionOfHorizontalScrollCard' ||
-          item.type == 'textHeader' ||
-          item.type == 'videoCollectionWithBrief';
+      final saveType = fliters.contains(item.type);
 
       return !saveType;
     });

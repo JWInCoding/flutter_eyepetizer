@@ -4,8 +4,9 @@ import 'package:flutter_eyepetizer/base/base_page.dart';
 import 'package:flutter_eyepetizer/common/model/video_page_model.dart';
 import 'package:flutter_eyepetizer/common/utils/cache_image.dart';
 import 'package:flutter_eyepetizer/common/utils/date_utils.dart';
+import 'package:flutter_eyepetizer/common/view_model.dart/page_list_view_model.dart';
 import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
-import 'package:flutter_eyepetizer/module/videoDetail/video_detail_view_model.dart';
+import 'package:flutter_eyepetizer/config/Api.dart';
 import 'package:provider/provider.dart';
 
 typedef VideoItemCallback = void Function(VideoItem videoItem);
@@ -32,7 +33,11 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => VideoDetailViewModel(videoId: widget.videoData.id),
+      create:
+          (_) => PageListViewModel(
+            '${API.videoRelateUrl}${widget.videoData.id}',
+            ['textCard', 'videoSmallCard'],
+          ),
       child: _buildContent(),
     );
   }
@@ -58,7 +63,7 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
           child: CustomScrollView(
             slivers: [
               _buildVideoInfo(_showInfoAnimation),
-              Consumer<VideoDetailViewModel>(
+              Consumer<PageListViewModel>(
                 builder: (context, viewModel, _) {
                   return _buildRelateVideoContent(viewModel);
                 },
@@ -240,29 +245,29 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
 
   /// 相关视频列表
   /// 相关视频列表
-  Widget _buildRelateVideoContent(VideoDetailViewModel viewModel) {
+  Widget _buildRelateVideoContent(PageListViewModel viewModel) {
     // 如果正在加载且没有数据，显示居中的加载指示器
-    if (viewModel.isLoading && viewModel.items.isEmpty) {
+    if (viewModel.isLoading && viewModel.itemList.isEmpty) {
       return SliverFillRemaining(
         child: Center(child: AdaptiveProgressIndicator(iosColor: Colors.white)),
       );
     }
 
     // 错误处理
-    if (viewModel.hasError && viewModel.items.isEmpty) {
+    if (viewModel.hasError && viewModel.itemList.isEmpty) {
       return SliverFillRemaining(
-        child: RetryWidget(onTapRetry: viewModel.refreshDetailData),
+        child: RetryWidget(onTapRetry: viewModel.refreshListData),
       );
     }
 
     // 空数据处理
-    if (!viewModel.isLoading && viewModel.items.isEmpty) {
+    if (!viewModel.isLoading && viewModel.itemList.isEmpty) {
       return SliverFillRemaining(child: const EmptyWidget());
     }
 
     // 有数据时渲染列表
     return SliverList.builder(
-      itemCount: viewModel.items.length,
+      itemCount: viewModel.itemList.length,
       itemBuilder: (context, index) {
         return _buildItemList(viewModel, index);
       },
@@ -270,8 +275,8 @@ class _VideoDetailInfoPageState extends State<VideoDetailInfoPage>
   }
 
   /// 相关视频列表
-  Widget _buildItemList(VideoDetailViewModel viewModel, int index) {
-    final item = viewModel.items[index];
+  Widget _buildItemList(PageListViewModel viewModel, int index) {
+    final item = viewModel.itemList[index];
     if (item.type == 'videoSmallCard') {
       return _buildCollectItem(context, item);
     } else if (item.data.text != null && item.data.text!.isNotEmpty) {
