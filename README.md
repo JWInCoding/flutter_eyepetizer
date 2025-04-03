@@ -2,6 +2,21 @@
 
 一个使用 Flutter 开发的 开眼 第三方客户端应用，提供了 开眼 App 的主要功能和内容展示。
 
+## 应用截图
+
+<div align="center">
+  <p>
+    <img src="screenshots/screenshot0.png" width="200" />
+    <img src="screenshots/screenshot1.png" width="200" />
+    <img src="screenshots/screenshot2.png" width="200" />
+    <img src="screenshots/screenshot3.png" width="200" />
+    <img src="screenshots/screenshot4.png" width="200" />
+  </p>
+  <p>
+    <em>从左到右：首页推荐、发现频道、视频播放界面、个人中心</em>
+  </p>
+</div>
+
 ## 开始使用
 
 ### 环境要求
