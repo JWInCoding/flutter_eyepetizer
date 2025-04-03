@@ -11,10 +11,7 @@
     <img src="screenshots/screenshot2.png" width="200" />
     <img src="screenshots/screenshot3.png" width="200" />
     <img src="screenshots/screenshot4.png" width="200" />
-  </p>
-  <p>
-    <em>从左到右：首页推荐、发现频道、视频播放界面、个人中心</em>
-  </p>
+  </p>  
 </div>
 
 ## 开始使用
