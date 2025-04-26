@@ -6,7 +6,7 @@ import 'package:flutter_eyepetizer/common/utils/navigator_util.dart';
 import 'package:flutter_eyepetizer/common/utils/request_util.dart';
 import 'package:flutter_eyepetizer/common/utils/toast_utils.dart';
 import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
-import 'package:flutter_eyepetizer/config/Api.dart';
+import 'package:flutter_eyepetizer/config/api.dart';
 import 'package:flutter_eyepetizer/module/author/author_list_page.dart';
 import 'package:flutter_eyepetizer/module/author/author_tabbar_delegate.dart';
 

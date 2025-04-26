@@ -6,7 +6,7 @@ import 'package:flutter_eyepetizer/common/utils/cache_image.dart';
 import 'package:flutter_eyepetizer/common/utils/date_utils.dart';
 import 'package:flutter_eyepetizer/common/view_model.dart/page_list_view_model.dart';
 import 'package:flutter_eyepetizer/common/widget/adaptive_progress_indicator.dart';
-import 'package:flutter_eyepetizer/config/Api.dart';
+import 'package:flutter_eyepetizer/config/api.dart';
 import 'package:provider/provider.dart';
 
 typedef VideoItemCallback = void Function(VideoItem videoItem);

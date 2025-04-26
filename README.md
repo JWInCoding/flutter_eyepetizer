@@ -18,7 +18,7 @@
 
 ### 环境要求
 
-- Flutter 3.29.2 或更高版本
+- Flutter 3.29.3 或更高版本
 - Dart 3.7.2 或更高版本
 - DevTools 2.42.3 或更高版本
 
@@ -52,7 +52,7 @@
    ```bash
    fvm install
    # 或者指定版本 
-   # fvm use 3.29.2
+   # fvm use 3.29.3
    ```
 
 5. 使用 FVM 获取依赖
@@ -74,7 +74,7 @@
 
 如果您不想使用 FVM，也可以直接使用全局安装的 Flutter：
 
-1. 确保您的 Flutter 版本为 3.29.2 或以上
+1. 确保您的 Flutter 版本为 3.29.3 或以上
    ```bash
    flutter --version
    ```
